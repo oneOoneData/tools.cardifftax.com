@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Tax Comparison Widget</title>
+    <style>
+        .tax-widget-embed {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 25px;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tax-widget-embed::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .widget-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .widget-header h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .widget-header p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .widget-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .widget-state {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .widget-state:hover {
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .widget-state h4 {
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .widget-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            margin-bottom: 10px;
+        }
+
+        .widget-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .widget-input {
+            margin-top: 10px;
+        }
+
+        .widget-input label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .widget-input input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: border-color 0.3s ease;
+        }
+
+        .widget-input input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .widget-calc-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .widget-calc-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .widget-results {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .widget-results.show {
+            display: block;
+            animation: widgetSlideIn 0.4s ease;
+        }
+
+        @keyframes widgetSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .widget-result-item {
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .widget-result-item h5 {
+            font-size: 1.1em;
+            margin-bottom: 6px;
+        }
+
+        .widget-tax-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .widget-tax-type {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        .widget-tax-amount {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 3px 0;
+        }
+
+        .widget-savings {
+            background: #28a745;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 12px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .widget-fun-fact {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            border-left: 3px solid #ff6b6b;
+        }
+
+        .widget-fun-fact h5 {
+            color: #fff;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .widget-fun-fact p {
+            color: #fff;
+            font-style: italic;
+            font-size: 0.85em;
+        }
+
+        @media (max-width: 600px) {
+            .widget-comparison {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .widget-tax-breakdown {
+                grid-template-columns: 1fr;
+            }
+            
+            .widget-header h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tax-widget-embed">
+        <div class="widget-header">
+            <h2>💰 Tax Comparison</h2>
+            <p>Compare your tax burden across states</p>
+        </div>
+
+        <div class="widget-comparison">
+            <div class="widget-state">
+                <h4>🏠 Current State</h4>
+                <select id="widgetState1" class="widget-select">
+                    <option value="">Select state...</option>
+                </select>
+                <div class="widget-input">
+                    <label for="widgetIncome1">Annual Income ($)</label>
+                    <input type="number" id="widgetIncome1" placeholder="75000" value="75000">
+                </div>
+            </div>
+
+            <div class="widget-state">
+                <h4>🌴 Compare With</h4>
+                <select id="widgetState2" class="widget-select">
+                    <option value="">Select state...</option>
+                </select>
+                <div class="widget-input">
+                    <label for="widgetIncome2">Annual Income ($)</label>
+                    <input type="number" id="widgetIncome2" placeholder="75000" value="75000">
+                </div>
+            </div>
+        </div>
+
+        <button class="widget-calc-btn" onclick="widgetCalculateTaxes()">🚀 Compare Taxes</button>
+
+        <div id="widgetResults" class="widget-results">
+            <h3>📊 Tax Comparison Results</h3>
+            <div id="widgetResultContent"></div>
+            <div id="widgetFunFacts" class="widget-fun-fact"></div>
+        </div>
+    </div>
+
+    <script>
+        // State tax data
+        const widgetStateTaxData = {
+            'Alabama': { income: 0.05, sales: 0.04, property: 0.004 },
+            'Alaska': { income: 0, sales: 0, property: 0.009 },
+            'Arizona': { income: 0.045, sales: 0.056, property: 0.006 },
+            'Arkansas': { income: 0.055, sales: 0.065, property: 0.006 },
+            'California': { income: 0.133, sales: 0.0725, property: 0.007 },
+            'Colorado': { income: 0.044, sales: 0.029, property: 0.005 },
+            'Connecticut': { income: 0.0699, sales: 0.0635, property: 0.018 },
+            'Delaware': { income: 0.066, sales: 0, property: 0.005 },
+            'Florida': { income: 0, sales: 0.06, property: 0.009 },
+            'Georgia': { income: 0.0575, sales: 0.04, property: 0.009 },
+            'Hawaii': { income: 0.11, sales: 0.04, property: 0.002 },
+            'Idaho': { income: 0.058, sales: 0.06, property: 0.007 },
+            'Illinois': { income: 0.0495, sales: 0.0625, property: 0.021 },
+            'Indiana': { income: 0.0323, sales: 0.07, property: 0.008 },
+            'Iowa': { income: 0.0575, sales: 0.06, property: 0.014 },
+            'Kansas': { income: 0.057, sales: 0.065, property: 0.011 },
+            'Kentucky': { income: 0.045, sales: 0.06, property: 0.008 },
+            'Louisiana': { income: 0.0425, sales: 0.0445, property: 0.005 },
+            'Maine': { income: 0.0715, sales: 0.055, property: 0.013 },
+            'Maryland': { income: 0.0575, sales: 0.06, property: 0.011 },
+            'Massachusetts': { income: 0.05, sales: 0.0625, property: 0.011 },
+            'Michigan': { income: 0.0425, sales: 0.06, property: 0.014 },
+            'Minnesota': { income: 0.0985, sales: 0.06875, property: 0.011 },
+            'Mississippi': { income: 0.05, sales: 0.07, property: 0.008 },
+            'Missouri': { income: 0.0495, sales: 0.04225, property: 0.009 },
+            'Montana': { income: 0.068, sales: 0, property: 0.008 },
+            'Nebraska': { income: 0.0664, sales: 0.055, property: 0.016 },
+            'Nevada': { income: 0, sales: 0.0685, property: 0.006 },
+            'New Hampshire': { income: 0.05, sales: 0, property: 0.018 },
+            'New Jersey': { income: 0.1075, sales: 0.06625, property: 0.021 },
+            'New Mexico': { income: 0.059, sales: 0.05125, property: 0.007 },
+            'New York': { income: 0.109, sales: 0.04, property: 0.015 },
+            'North Carolina': { income: 0.0499, sales: 0.0475, property: 0.008 },
+            'North Dakota': { income: 0.029, sales: 0.05, property: 0.009 },
+            'Ohio': { income: 0.0399, sales: 0.0575, property: 0.014 },
+            'Oklahoma': { income: 0.0475, sales: 0.045, property: 0.007 },
+            'Oregon': { income: 0.099, sales: 0, property: 0.009 },
+            'Pennsylvania': { income: 0.0307, sales: 0.06, property: 0.015 },
+            'Rhode Island': { income: 0.0599, sales: 0.07, property: 0.014 },
+            'South Carolina': { income: 0.07, sales: 0.06, property: 0.005 },
+            'South Dakota': { income: 0, sales: 0.045, property: 0.012 },
+            'Tennessee': { income: 0, sales: 0.07, property: 0.007 },
+            'Texas': { income: 0, sales: 0.0625, property: 0.018 },
+            'Utah': { income: 0.0485, sales: 0.061, property: 0.006 },
+            'Vermont': { income: 0.0875, sales: 0.06, property: 0.018 },
+            'Virginia': { income: 0.0575, sales: 0.053, property: 0.008 },
+            'Washington': { income: 0, sales: 0.065, property: 0.009 },
+            'West Virginia': { income: 0.065, sales: 0.06, property: 0.005 },
+            'Wisconsin': { income: 0.0765, sales: 0.05, property: 0.015 },
+            'Wyoming': { income: 0, sales: 0.04, property: 0.006 }
+        };
+
+        // Fun facts
+        const widgetFunFacts = {
+            'Alaska': "Alaska has no state income tax AND pays residents a dividend from oil revenues!",
+            'Florida': "Florida has no state income tax - perfect for retirees!",
+            'Texas': "Texas has no state income tax but higher property taxes to compensate.",
+            'Nevada': "Nevada has no state income tax and is famous for its entertainment industry.",
+            'Wyoming': "Wyoming has no state income tax and the lowest population density in the US.",
+            'California': "California has the highest state income tax rate but beautiful weather year-round.",
+            'New York': "New York has high taxes but offers world-class amenities and opportunities.",
+            'Hawaii': "Hawaii has high taxes but you get to live in paradise!",
+            'Delaware': "Delaware has no sales tax - great for shopping!",
+            'Oregon': "Oregon has no sales tax but higher income taxes to compensate."
+        };
+
+        // Populate state dropdowns
+        function widgetPopulateStates() {
+            const states = Object.keys(widgetStateTaxData).sort();
+            const state1Select = document.getElementById('widgetState1');
+            const state2Select = document.getElementById('widgetState2');
+            
+            states.forEach(state => {
+                const option1 = new Option(state, state);
+                const option2 = new Option(state, state);
+                state1Select.add(option1);
+                state2Select.add(option2);
+            });
+        }
+
+        // Calculate taxes
+        function widgetCalculateTaxes() {
+            const state1 = document.getElementById('widgetState1').value;
+            const state2 = document.getElementById('widgetState2').value;
+            const income1 = parseFloat(document.getElementById('widgetIncome1').value) || 0;
+            const income2 = parseFloat(document.getElementById('widgetIncome2').value) || 0;
+
+            if (!state1 || !state2) {
+                alert('Please select both states to compare!');
+                return;
+            }
+
+            const taxes1 = widgetCalculateStateTaxes(state1, income1);
+            const taxes2 = widgetCalculateStateTaxes(state2, income2);
+            const total1 = taxes1.income + taxes1.sales + taxes1.property;
+            const total2 = taxes2.income + taxes2.sales + taxes2.property;
+            const savings = total1 - total2;
+
+            widgetDisplayResults(state1, state2, taxes1, taxes2, total1, total2, savings);
+        }
+
+        // Calculate taxes for a specific state
+        function widgetCalculateStateTaxes(state, income) {
+            const data = widgetStateTaxData[state];
+            const incomeTax = income * data.income;
+            const salesTax = income * 0.3 * data.sales;
+            const propertyTax = income * 0.25 * data.property;
+
+            return {
+                income: incomeTax,
+                sales: salesTax,
+                property: propertyTax
+            };
+        }
+
+        // Display results
+        function widgetDisplayResults(state1, state2, taxes1, taxes2, total1, total2, savings) {
+            const resultsDiv = document.getElementById('widgetResults');
+            const contentDiv = document.getElementById('widgetResultContent');
+            const funFactsDiv = document.getElementById('widgetFunFacts');
+
+            contentDiv.innerHTML = `
+                <div class="widget-tax-breakdown">
+                    <div class="widget-result-item">
+                        <h5>${state1}</h5>
+                        <div class="widget-tax-amount">$${total1.toLocaleString()}</div>
+                        <div class="widget-tax-type">Income: $${taxes1.income.toLocaleString()}</div>
+                        <div class="widget-tax-type">Sales: $${taxes1.sales.toLocaleString()}</div>
+                        <div class="widget-tax-type">Property: $${taxes1.property.toLocaleString()}</div>
+                    </div>
+                    <div class="widget-result-item">
+                        <h5>${state2}</h5>
+                        <div class="widget-tax-amount">$${total2.toLocaleString()}</div>
+                        <div class="widget-tax-type">Income: $${taxes2.income.toLocaleString()}</div>
+                        <div class="widget-tax-type">Sales: $${taxes2.sales.toLocaleString()}</div>
+                        <div class="widget-tax-type">Property: $${taxes2.property.toLocaleString()}</div>
+                    </div>
+                </div>
+                ${savings > 0 ? 
+                    `<div class="widget-savings">🎉 Save $${savings.toLocaleString()} per year in ${state2}!` :
+                    `<div class="widget-savings">💸 Pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
+                }
+            `;
+
+            // Add fun fact if available
+            const fact = widgetFunFacts[state2] || widgetFunFacts[state1];
+            if (fact) {
+                funFactsDiv.innerHTML = `
+                    <h5>💡 Fun Fact!</h5>
+                    <p>${fact}</p>
+                `;
+            } else {
+                funFactsDiv.innerHTML = '';
+            }
+
+            resultsDiv.classList.add('show');
+        }
+
+        // Initialize the widget
+        document.addEventListener('DOMContentLoaded', function() {
+            widgetPopulateStates();
+        });
+    </script>
+</body>
+</html> 
