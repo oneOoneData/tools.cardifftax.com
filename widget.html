@@ -224,6 +224,82 @@
             font-size: 0.85em;
         }
 
+        .widget-embed-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .widget-embed-section h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .widget-embed-section p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 15px;
+            font-size: 0.85em;
+        }
+
+        .widget-copy-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .widget-copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .widget-copy-btn.copied {
+            background: #28a745;
+            color: white;
+        }
+
+        .widget-embed-code {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75em;
+            overflow-x: auto;
+            margin: 10px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .widget-cardiff-branding {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 1px solid #e9ecef;
+            color: #666;
+            font-size: 0.75em;
+        }
+
+        .widget-cardiff-branding a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .widget-cardiff-branding a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 600px) {
             .widget-comparison {
                 grid-template-columns: 1fr;
@@ -277,6 +353,21 @@
             <h3>📊 Tax Comparison Results</h3>
             <div id="widgetResultContent"></div>
             <div id="widgetFunFacts" class="widget-fun-fact"></div>
+        </div>
+
+        <div class="widget-embed-section">
+            <h4>🚀 Share This Widget</h4>
+            <p>Add this tax calculator to your website!</p>
+            
+            <div class="widget-embed-code" id="widgetEmbedCode">
+                &lt;iframe src="https://oneOoneData.github.io/StateTaxWidget/widget.html" width="100%" height="500" frameborder="0"&gt;&lt;/iframe&gt;
+            </div>
+            
+            <button class="widget-copy-btn" onclick="widgetCopyEmbedCode()">📋 Copy Code</button>
+        </div>
+
+        <div class="widget-cardiff-branding">
+            Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a> - <a href="https://www.cardifftax.com" target="_blank">www.cardifftax.com</a>
         </div>
     </div>
 
@@ -439,6 +530,36 @@
             }
 
             resultsDiv.classList.add('show');
+        }
+
+        // Copy embed code function
+        function widgetCopyEmbedCode() {
+            const embedCode = document.getElementById('widgetEmbedCode').textContent;
+            navigator.clipboard.writeText(embedCode).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Code';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = embedCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Code';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
         }
 
         // Initialize the widget
