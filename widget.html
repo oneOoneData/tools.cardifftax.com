@@ -83,6 +83,14 @@
             cursor: pointer;
             transition: border-color 0.3s ease;
             margin-bottom: 10px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 14px;
+            padding-right: 25px;
         }
 
         .widget-select:focus {
@@ -109,6 +117,19 @@
             border-radius: 6px;
             font-size: 0.9em;
             transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .widget-input input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .widget-input input[type="number"]::-webkit-outer-spin-button,
+        .widget-input input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .widget-input input:focus {
@@ -317,17 +338,140 @@
         }
 
         @media (max-width: 600px) {
+            .tax-widget-embed {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            
             .widget-comparison {
                 grid-template-columns: 1fr;
                 gap: 15px;
             }
             
+            .widget-state {
+                padding: 15px;
+            }
+            
+            .widget-state h4 {
+                font-size: 1em;
+            }
+            
+            .widget-select, .widget-input input {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+            
             .widget-tax-breakdown {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
             
             .widget-header h2 {
-                font-size: 1.5em;
+                font-size: 1.4em;
+            }
+            
+            .widget-header p {
+                font-size: 0.85em;
+            }
+            
+            .widget-calc-btn {
+                padding: 10px;
+                font-size: 1em;
+            }
+            
+            .widget-results {
+                padding: 15px;
+            }
+            
+            .widget-embed-section {
+                padding: 12px;
+            }
+            
+            .widget-embed-section h4 {
+                font-size: 0.9em;
+            }
+            
+            .widget-embed-section p {
+                font-size: 0.8em;
+            }
+            
+            .widget-embed-code {
+                font-size: 0.7em;
+                padding: 8px;
+            }
+            
+            .widget-copy-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
+            
+            .widget-disclaimer {
+                font-size: 0.65em;
+                padding: 6px;
+            }
+            
+            .widget-cardiff-branding {
+                font-size: 0.7em;
+                padding: 8px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .tax-widget-embed {
+                padding: 15px;
+            }
+            
+            .widget-header h2 {
+                font-size: 1.2em;
+            }
+            
+            .widget-header p {
+                font-size: 0.8em;
+            }
+            
+            .widget-state {
+                padding: 12px;
+            }
+            
+            .widget-state h4 {
+                font-size: 0.9em;
+            }
+            
+            .widget-select, .widget-input input {
+                padding: 6px;
+                font-size: 0.8em;
+            }
+            
+            .widget-calc-btn {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+            
+            .widget-results {
+                padding: 12px;
+            }
+            
+            .widget-result-item {
+                padding: 8px;
+                margin: 8px 0;
+            }
+            
+            .widget-tax-amount {
+                font-size: 1.1em;
+            }
+            
+            .widget-embed-section {
+                padding: 10px;
+            }
+            
+            .widget-embed-code {
+                font-size: 0.65em;
+                padding: 6px;
+            }
+            
+            .widget-copy-btn {
+                padding: 5px 10px;
+                font-size: 0.75em;
             }
         }
     </style>
