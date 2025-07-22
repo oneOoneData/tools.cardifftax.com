@@ -352,6 +352,18 @@
                 grid-template-columns: 1fr;
                 gap: 12px;
             }
+            
+            .embed-option {
+                display: none;
+            }
+            
+            .share-section h3 {
+                margin-bottom: 10px;
+            }
+            
+            .share-section p {
+                margin-bottom: 15px;
+            }
         }
 
         .embed-option {
@@ -433,6 +445,63 @@
             color: #495057;
         }
 
+        .methodology-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .methodology-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .methodology-section h4 {
+            color: #495057;
+            margin: 15px 0 8px 0;
+            font-size: 1.1em;
+        }
+
+        .methodology-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .methodology-section ul {
+            color: #666;
+            line-height: 1.6;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .methodology-section li {
+            margin-bottom: 5px;
+        }
+
+        .tax-breakdown-method {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .tax-breakdown-method h5 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .tax-breakdown-method p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -485,6 +554,10 @@
             .embed-options {
                 grid-template-columns: 1fr;
                 gap: 15px;
+            }
+            
+            .embed-option {
+                display: none;
             }
             
             .embed-code {
@@ -578,6 +651,35 @@
                 font-size: 0.75em;
                 padding: 10px;
             }
+            
+            .methodology-section {
+                padding: 20px;
+                margin-top: 20px;
+            }
+            
+            .methodology-section h3 {
+                font-size: 1.1em;
+            }
+            
+            .methodology-section h4 {
+                font-size: 1em;
+            }
+            
+            .methodology-section p {
+                font-size: 0.9em;
+            }
+            
+            .tax-breakdown-method {
+                padding: 12px;
+            }
+            
+            .tax-breakdown-method h5 {
+                font-size: 0.9em;
+            }
+            
+            .tax-breakdown-method p {
+                font-size: 0.85em;
+            }
         }
     </style>
 </head>
@@ -658,6 +760,48 @@
             <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
                 💡 <strong>Ready to use!</strong> The embed codes above are already configured with your GitHub Pages domain.
             </p>
+        </div>
+
+        <div class="methodology-section">
+            <h3>📊 Methodology & Tax Calculations</h3>
+            
+            <h4>Taxes Included in Our Comparison</h4>
+            <p>Our calculator considers the three major state-level taxes that most individuals encounter:</p>
+            
+            <div class="tax-breakdown-method">
+                <h5>💰 State Income Tax</h5>
+                <p><strong>Calculation:</strong> Annual Income × State Income Tax Rate</p>
+                <p><strong>Data Source:</strong> State tax brackets and rates as of 2025</p>
+                <p><strong>Note:</strong> We use the highest marginal rate for simplicity. Actual rates may vary based on income brackets.</p>
+            </div>
+            
+            <div class="tax-breakdown-method">
+                <h5>🛒 State Sales Tax</h5>
+                <p><strong>Calculation:</strong> (Annual Income × 30%) × State Sales Tax Rate</p>
+                <p><strong>Assumption:</strong> 30% of annual income is spent on taxable goods and services</p>
+                <p><strong>Note:</strong> Many states have varying local sales tax rates. We use state-level rates only.</p>
+            </div>
+            
+            <div class="tax-breakdown-method">
+                <h5>🏠 Property Tax</h5>
+                <p><strong>Calculation:</strong> (Annual Income × 25%) × State Property Tax Rate</p>
+                <p><strong>Assumption:</strong> Property value is approximately 25% of annual income</p>
+                <p><strong>Note:</strong> Property tax rates vary by county and municipality. We use state averages.</p>
+            </div>
+            
+            <h4>Important Limitations</h4>
+            <ul>
+                <li><strong>Estimates Only:</strong> These calculations provide rough estimates and may not reflect your actual tax burden</li>
+                <li><strong>Simplified Approach:</strong> We use flat rates rather than progressive tax brackets for income tax</li>
+                <li><strong>Local Variations:</strong> Local taxes, fees, and special assessments are not included</li>
+                <li><strong>Deductions & Credits:</strong> State-specific deductions, credits, and exemptions are not factored in</li>
+                <li><strong>Dynamic Rates:</strong> Tax rates change frequently and may differ from our data</li>
+            </ul>
+            
+            <h4>Why These Assumptions?</h4>
+            <p>We use these simplified assumptions to provide a quick, comparable estimate across states. While not perfect, this approach helps identify states with generally higher or lower tax burdens for planning purposes.</p>
+            
+            <p><strong>For accurate tax planning:</strong> Always consult with a qualified tax professional who can consider your specific circumstances, deductions, and local tax variations.</p>
         </div>
 
         <div class="widget-disclaimer">
