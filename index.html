@@ -110,6 +110,7 @@
         .state-select:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         .income-input {
@@ -148,6 +149,7 @@
         .income-input input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         .calculate-btn {
@@ -167,6 +169,11 @@
         .calculate-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
         }
 
         .results {
@@ -293,6 +300,11 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         }
 
+        .copy-widget-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
         .copy-widget-btn.copied {
             background: #28a745;
             color: white;
@@ -331,6 +343,11 @@
 
         .copy-btn:hover {
             background: rgba(255,255,255,0.3);
+        }
+
+        .copy-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
         }
 
         .copy-btn.copied {
@@ -681,35 +698,68 @@
                 font-size: 0.85em;
             }
         }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .tax-widget {
+                border: 2px solid #000;
+            }
+            
+            .state-selector {
+                border: 2px solid #000;
+            }
+            
+            .results {
+                border: 2px solid #fff;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="tax-widget">
         <div class="header">
             <h1>💰 State Tax Comparison</h1>
-            <p>Compare your tax burden across different states and find your perfect tax haven!</p>
+            <p>Compare your <strong>total state tax burden</strong> across different states and find your perfect tax haven!</p>
+            <p style="font-size: 0.9em; color: #888; margin-top: 10px;">
+                <strong>What's included:</strong> State income tax, sales tax, and property tax estimates
+            </p>
         </div>
 
         <div class="comparison-container">
             <div class="state-selector">
                 <h3>🏠 Current State</h3>
-                <select id="state1" class="state-select">
+                <select id="state1" class="state-select" aria-label="Select your current state">
                     <option value="">Select a state...</option>
                 </select>
                 <div class="income-input">
                     <label for="income1">Annual Income ($)</label>
-                    <input type="number" id="income1" placeholder="Enter your annual income" value="75000">
+                    <input type="number" id="income1" placeholder="Enter your annual income" value="75000" aria-describedby="income1-help">
+                    <small id="income1-help" style="color: #666; font-size: 0.8em; display: block; margin-top: 5px;">
+                        Enter your gross annual income before deductions
+                    </small>
                 </div>
             </div>
 
             <div class="state-selector">
                 <h3>🌴 Compare With</h3>
-                <select id="state2" class="state-select">
+                <select id="state2" class="state-select" aria-label="Select state to compare with">
                     <option value="">Select a state...</option>
                 </select>
                 <div class="income-input">
                     <label for="income2">Annual Income ($)</label>
-                    <input type="number" id="income2" placeholder="Enter your annual income" value="75000">
+                    <input type="number" id="income2" placeholder="Enter your annual income" value="75000" aria-describedby="income2-help">
+                    <small id="income2-help" style="color: #666; font-size: 0.8em; display: block; margin-top: 5px;">
+                        Enter your gross annual income before deductions
+                    </small>
                 </div>
             </div>
         </div>
@@ -720,6 +770,17 @@
             <h2>📊 Your Tax Comparison Results</h2>
             <div id="resultContent"></div>
             <div id="funFacts" class="fun-facts"></div>
+        </div>
+
+        <div style="background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 10px; padding: 20px; margin: 30px 0;">
+            <h3 style="color: #1565c0; margin-bottom: 15px;">💡 Quick Tips for Best Results</h3>
+            <ul style="color: #1976d2; line-height: 1.6; margin-left: 20px;">
+                <li><strong>Use the same income</strong> for both states to get a fair comparison</li>
+                <li><strong>Consider your lifestyle:</strong> High-income earners may benefit more from no-income-tax states</li>
+                <li><strong>Think about property:</strong> If you rent, property tax differences won't affect you directly</li>
+                <li><strong>Remember local taxes:</strong> This calculator uses state averages - your actual rates may vary</li>
+                <li><strong>Plan for the long term:</strong> Tax rates change, so use this for general planning only</li>
+            </ul>
         </div>
 
         <div class="share-section">
@@ -765,6 +826,9 @@
         <div class="methodology-section">
             <h3>📊 Methodology & Tax Calculations</h3>
             
+            <h4>What is "Tax Burden"?</h4>
+            <p>For this calculator, <strong>"tax burden"</strong> refers to the total amount of state-level taxes you would pay annually, including income tax, sales tax, and property tax. This gives you a comprehensive view of your total state tax liability.</p>
+            
             <h4>Taxes Included in Our Comparison</h4>
             <p>Our calculator considers the three major state-level taxes that most individuals encounter:</p>
             
@@ -772,13 +836,15 @@
                 <h5>💰 State Income Tax</h5>
                 <p><strong>Calculation:</strong> Annual Income × State Income Tax Rate</p>
                 <p><strong>Data Source:</strong> State tax brackets and rates as of 2025</p>
-                <p><strong>Note:</strong> We use the highest marginal rate for simplicity. Actual rates may vary based on income brackets.</p>
+                <p><strong>Assumption:</strong> We use the highest marginal rate for simplicity. Actual rates may vary based on income brackets and filing status.</p>
+                <p><strong>What's NOT included:</strong> Federal income tax, local income taxes, or state-specific deductions and credits</p>
             </div>
             
             <div class="tax-breakdown-method">
                 <h5>🛒 State Sales Tax</h5>
                 <p><strong>Calculation:</strong> (Annual Income × 30%) × State Sales Tax Rate</p>
                 <p><strong>Assumption:</strong> 30% of annual income is spent on taxable goods and services</p>
+                <p><strong>What's NOT included:</strong> Local sales tax variations, exempt items (groceries, prescription drugs), or online purchases</p>
                 <p><strong>Note:</strong> Many states have varying local sales tax rates. We use state-level rates only.</p>
             </div>
             
@@ -786,30 +852,54 @@
                 <h5>🏠 Property Tax</h5>
                 <p><strong>Calculation:</strong> (Annual Income × 25%) × State Property Tax Rate</p>
                 <p><strong>Assumption:</strong> Property value is approximately 25% of annual income</p>
+                <p><strong>What's NOT included:</strong> Local property tax variations, homestead exemptions, or special assessments</p>
                 <p><strong>Note:</strong> Property tax rates vary by county and municipality. We use state averages.</p>
             </div>
             
-            <h4>Important Limitations</h4>
+            <h4>Key Assumptions & Limitations</h4>
             <ul>
-                <li><strong>Estimates Only:</strong> These calculations provide rough estimates and may not reflect your actual tax burden</li>
-                <li><strong>Simplified Approach:</strong> We use flat rates rather than progressive tax brackets for income tax</li>
+                <li><strong>Filing Status:</strong> Assumes single filer with no dependents</li>
+                <li><strong>Deductions:</strong> Uses standard deduction; no itemized deductions or credits</li>
+                <li><strong>Income Distribution:</strong> Assumes income is evenly earned throughout the year</li>
+                <li><strong>Simplified Rates:</strong> Uses flat rates rather than progressive tax brackets for income tax</li>
                 <li><strong>Local Variations:</strong> Local taxes, fees, and special assessments are not included</li>
-                <li><strong>Deductions & Credits:</strong> State-specific deductions, credits, and exemptions are not factored in</li>
                 <li><strong>Dynamic Rates:</strong> Tax rates change frequently and may differ from our data</li>
+                <li><strong>Property Ownership:</strong> Assumes you own property; renters would have different tax implications</li>
+            </ul>
+            
+            <h4>When to Use This Calculator</h4>
+            <p>This tool is best used for:</p>
+            <ul>
+                <li><strong>General Planning:</strong> Getting a rough idea of tax differences between states</li>
+                <li><strong>Comparison Shopping:</strong> Identifying states with generally higher or lower tax burdens</li>
+                <li><strong>Initial Research:</strong> Starting point for more detailed tax planning</li>
+            </ul>
+            
+            <h4>When NOT to Use This Calculator</h4>
+            <p>This tool is NOT suitable for:</p>
+            <ul>
+                <li><strong>Precise Tax Planning:</strong> Final tax decisions or detailed financial planning</li>
+                <li><strong>Complex Situations:</strong> Business owners, multiple income sources, or complex deductions</li>
+                <li><strong>Legal Advice:</strong> Tax compliance or legal tax matters</li>
             </ul>
             
             <h4>Why These Assumptions?</h4>
             <p>We use these simplified assumptions to provide a quick, comparable estimate across states. While not perfect, this approach helps identify states with generally higher or lower tax burdens for planning purposes.</p>
             
-            <p><strong>For accurate tax planning:</strong> Always consult with a qualified tax professional who can consider your specific circumstances, deductions, and local tax variations.</p>
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                <h5 style="color: #856404; margin-bottom: 10px;">⚠️ Important Disclaimer</h5>
+                <p style="color: #856404; margin-bottom: 0;">
+                    <strong>For accurate tax planning:</strong> Always consult with a qualified tax professional who can consider your specific circumstances, deductions, and local tax variations. This calculator provides estimates only and should not be considered as tax advice.
+                </p>
+            </div>
         </div>
 
         <div class="widget-disclaimer">
-            <strong>Disclaimer:</strong> This calculator provides estimates only and should not be considered as tax advice. Tax rates and regulations change frequently. Please consult with a qualified tax professional for personalized advice. <strong>Data last updated: January 2025</strong>
+            <strong>⚠️ Important Disclaimer:</strong> This calculator provides estimates only and should not be considered as tax advice. Tax rates and regulations change frequently. Please consult with a qualified tax professional for personalized advice. <strong>Data last updated: January 2025</strong>
         </div>
 
         <div class="cardiff-branding">
-            Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a> - <a href="https://www.cardifftax.com" target="_blank">www.cardifftax.com</a>
+            Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a> 🌴 <a href="https://www.cardifftax.com" target="_blank">www.cardifftax.com</a>
         </div>
     </div>
 
@@ -908,13 +998,36 @@
                 return;
             }
 
-            const taxes1 = calculateStateTaxes(state1, income1);
-            const taxes2 = calculateStateTaxes(state2, income2);
-            const total1 = taxes1.income + taxes1.sales + taxes1.property;
-            const total2 = taxes2.income + taxes2.sales + taxes2.property;
-            const savings = total1 - total2;
+            if (income1 <= 0 || income2 <= 0) {
+                alert('Please enter valid income amounts greater than $0!');
+                return;
+            }
 
-            displayResults(state1, state2, taxes1, taxes2, total1, total2, savings);
+            // Show loading state
+            const calculateBtn = document.querySelector('.calculate-btn');
+            const originalText = calculateBtn.textContent;
+            calculateBtn.textContent = '🔄 Calculating...';
+            calculateBtn.disabled = true;
+
+            // Simulate a small delay for better UX
+            setTimeout(() => {
+                try {
+                    const taxes1 = calculateStateTaxes(state1, income1);
+                    const taxes2 = calculateStateTaxes(state2, income2);
+                    const total1 = taxes1.income + taxes1.sales + taxes1.property;
+                    const total2 = taxes2.income + taxes2.sales + taxes2.property;
+                    const savings = total1 - total2;
+
+                    displayResults(state1, state2, taxes1, taxes2, total1, total2, savings);
+                } catch (error) {
+                    console.error('Error calculating taxes:', error);
+                    alert('An error occurred while calculating taxes. Please try again.');
+                } finally {
+                    // Reset button
+                    calculateBtn.textContent = originalText;
+                    calculateBtn.disabled = false;
+                }
+            }, 500);
         }
 
         // Calculate taxes for a specific state
@@ -937,7 +1050,44 @@
             const contentDiv = document.getElementById('resultContent');
             const funFactsDiv = document.getElementById('funFacts');
 
+            // Calculate percentage difference
+            const percentageDiff = ((Math.abs(savings) / total1) * 100).toFixed(1);
+            
+            // Create interpretive summary
+            let summaryText = '';
+            if (savings > 0) {
+                summaryText = `
+                    <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #155724; margin-bottom: 10px;">🎉 Tax Savings Opportunity!</h4>
+                        <p style="color: #155724; margin-bottom: 0;">
+                            At your income level, you could save <strong>$${savings.toLocaleString()}</strong> annually by moving to ${state2}. 
+                            That's a <strong>${percentageDiff}% reduction</strong> in your state tax burden!
+                        </p>
+                    </div>
+                `;
+            } else if (savings < 0) {
+                summaryText = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #721c24; margin-bottom: 10px;">💸 Higher Tax Burden</h4>
+                        <p style="color: #721c24; margin-bottom: 0;">
+                            Moving to ${state2} would increase your state tax burden by <strong>$${Math.abs(savings).toLocaleString()}</strong> annually. 
+                            That's a <strong>${percentageDiff}% increase</strong> in your state taxes.
+                        </p>
+                    </div>
+                `
+            } else {
+                summaryText = `
+                    <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #0c5460; margin-bottom: 10px;">⚖️ Similar Tax Burden</h4>
+                        <p style="color: #0c5460; margin-bottom: 0;">
+                            Both states have very similar tax burdens at your income level. The difference is minimal.
+                        </p>
+                    </div>
+                `;
+            }
+
             contentDiv.innerHTML = `
+                ${summaryText}
                 <div class="tax-breakdown">
                     <div class="result-item">
                         <h4>${state1}</h4>
@@ -945,6 +1095,9 @@
                         <div class="tax-type">Income Tax: $${taxes1.income.toLocaleString()}</div>
                         <div class="tax-type">Sales Tax: $${taxes1.sales.toLocaleString()}</div>
                         <div class="tax-type">Property Tax: $${taxes1.property.toLocaleString()}</div>
+                        <small style="color: rgba(255,255,255,0.8); display: block; margin-top: 8px;">
+                            Total annual state tax burden
+                        </small>
                     </div>
                     <div class="result-item">
                         <h4>${state2}</h4>
@@ -952,12 +1105,25 @@
                         <div class="tax-type">Income Tax: $${taxes2.income.toLocaleString()}</div>
                         <div class="tax-type">Sales Tax: $${taxes2.sales.toLocaleString()}</div>
                         <div class="tax-type">Property Tax: $${taxes2.property.toLocaleString()}</div>
+                        <small style="color: rgba(255,255,255,0.8); display: block; margin-top: 8px;">
+                            Total annual state tax burden
+                        </small>
                     </div>
                 </div>
-                ${savings > 0 ? 
-                    `<div class="savings">🎉 You could save $${savings.toLocaleString()} per year by moving to ${state2}!` :
-                    `<div class="savings">💸 You would pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
+                ${savings !== 0 ? 
+                    `<div class="savings">
+                        ${savings > 0 ? 
+                            `🎉 You could save $${savings.toLocaleString()} per year by moving to ${state2}!` :
+                            `💸 You would pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
+                        }
+                    </div>` : 
+                    `<div class="savings">⚖️ Both states have very similar tax burdens at your income level.</div>`
                 }
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
+                    <p style="margin-bottom: 0; color: rgba(255,255,255,0.9);">
+                        <strong>💡 Remember:</strong> These are estimates based on simplified assumptions. Your actual tax burden may vary based on your specific circumstances, deductions, and local tax rates.
+                    </p>
+                </div>
             `;
 
             // Add fun fact if available
@@ -1049,4 +1215,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
