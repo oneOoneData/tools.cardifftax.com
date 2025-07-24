@@ -79,66 +79,6 @@
             text-decoration: underline;
         }
 
-        .california-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            margin-bottom: 20px;
-            gap: 8px;
-            padding-right: 10px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(16px);
-        }
-
-        .toggle-label {
-            font-weight: 500;
-            color: #666;
-            font-size: 0.9em;
-        }
-
         .comparison-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -853,14 +793,6 @@
             </p>
         </div>
 
-        <div class="california-toggle">
-            <label class="toggle-label">California Edition</label>
-            <label class="toggle-switch">
-                <input type="checkbox" id="californiaToggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-
         <div class="comparison-container">
             <div class="state-selector">
                 <h3><span>🏠</span> Current State</h3>
@@ -1099,20 +1031,6 @@
             'Oregon': "Oregon has no sales tax but higher income taxes to compensate."
         };
 
-        // Sun days data (average annual sunny days)
-        const sunDaysData = {
-            'Alabama': 213, 'Alaska': 101, 'Arizona': 330, 'Arkansas': 217, 'California': 284,
-            'Colorado': 300, 'Connecticut': 206, 'Delaware': 213, 'Florida': 233, 'Georgia': 218,
-            'Hawaii': 271, 'Idaho': 206, 'Illinois': 189, 'Indiana': 186, 'Iowa': 200,
-            'Kansas': 230, 'Kentucky': 189, 'Louisiana': 216, 'Maine': 197, 'Maryland': 213,
-            'Massachusetts': 200, 'Michigan': 183, 'Minnesota': 198, 'Mississippi': 216, 'Missouri': 202,
-            'Montana': 188, 'Nebraska': 220, 'Nevada': 252, 'New Hampshire': 197, 'New Jersey': 206,
-            'New Mexico': 278, 'New York': 197, 'North Carolina': 213, 'North Dakota': 200, 'Ohio': 173,
-            'Oklahoma': 234, 'Oregon': 144, 'Pennsylvania': 160, 'Rhode Island': 202, 'South Carolina': 216,
-            'South Dakota': 213, 'Tennessee': 207, 'Texas': 234, 'Utah': 238, 'Vermont': 160,
-            'Virginia': 205, 'Washington': 152, 'West Virginia': 160, 'Wisconsin': 184, 'Wyoming': 220
-        };
-
         // Populate state dropdowns
         function populateStates() {
             const states = Object.keys(stateTaxData).sort();
@@ -1129,28 +1047,6 @@
                 state1Select.add(option1);
                 state2Select.add(option2);
             });
-        }
-
-        // Handle California Edition toggle
-        function handleCaliforniaToggle() {
-            const californiaToggle = document.getElementById('californiaToggle');
-            const state1Select = document.getElementById('state1');
-            const state1Label = document.querySelector('.state-selector h3');
-            
-            if (californiaToggle.checked) {
-                // Set California as default and disable
-                state1Select.value = 'California';
-                state1Select.disabled = true;
-                state1Select.style.opacity = '0.6';
-                state1Select.style.cursor = 'not-allowed';
-                state1Label.innerHTML = '<span>🏠</span> Current State (California)';
-            } else {
-                // Re-enable state selection
-                state1Select.disabled = false;
-                state1Select.style.opacity = '1';
-                state1Select.style.cursor = 'pointer';
-                state1Label.innerHTML = '<span>🏠</span> Current State';
-            }
         }
 
         // Calculate taxes
@@ -1216,34 +1112,9 @@
             const resultsDiv = document.getElementById('results');
             const contentDiv = document.getElementById('resultContent');
             const funFactsDiv = document.getElementById('funFacts');
-            const californiaToggle = document.getElementById('californiaToggle');
 
             // Calculate percentage difference
             const percentageDiff = ((Math.abs(savings) / total1) * 100).toFixed(1);
-            
-            // Calculate sun days if California Edition is enabled
-            let sunDaysInfo = '';
-            if (californiaToggle.checked && state1 === 'California') {
-                const californiaSunDays = sunDaysData['California'] || 284;
-                const comparisonSunDays = sunDaysData[state2] || 200;
-                const sunDaysDifference = californiaSunDays - comparisonSunDays;
-                
-                if (sunDaysDifference !== 0) {
-                    const sunDaysChange = sunDaysDifference > 0 ? 'lose' : 'gain';
-                    const sunDaysAbs = Math.abs(sunDaysDifference);
-                    const costPerDay = savings !== 0 ? Math.abs(savings / sunDaysDifference).toFixed(0) : 0;
-                    
-                    sunDaysInfo = `
-                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
-                            <h4 style="color: #856404; margin-bottom: 10px;"><span style="color: #667eea;">☀️</span> Sun Days Trade-off</h4>
-                            <p style="color: #856404; margin-bottom: 0;">
-                                Moving to ${state2} means you'd <strong>${sunDaysChange} ${sunDaysAbs} days of sunshine</strong> per year.
-                                ${savings !== 0 ? `That's <strong>$${costPerDay}</strong> per day of sun!` : ''}
-                            </p>
-                        </div>
-                    `;
-                }
-            }
             
             // Create interpretive summary
             let summaryText = '';
@@ -1280,7 +1151,6 @@
 
             contentDiv.innerHTML = `
                 ${summaryText}
-                ${sunDaysInfo}
                 <div class="tax-breakdown">
                     <div class="result-item">
                         <h4>${state1}</h4>
@@ -1405,15 +1275,6 @@
                     }
                 });
             });
-
-            // California Edition toggle
-            const californiaToggle = document.getElementById('californiaToggle');
-            californiaToggle.addEventListener('change', function() {
-                handleCaliforniaToggle();
-            });
-
-            // Initial call to set default state for California toggle
-            handleCaliforniaToggle();
         });
     </script>
 </body>
