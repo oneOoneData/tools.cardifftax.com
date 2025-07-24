@@ -64,11 +64,9 @@
         }
 
         .cardiff-branding-header {
-            position: absolute;
-            top: 0;
-            right: 0;
             font-size: 0.9em;
             color: #667eea;
+            margin-bottom: 15px;
         }
 
         .cardiff-branding-header a {
@@ -84,16 +82,17 @@
         .california-toggle {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             margin-bottom: 20px;
-            gap: 10px;
+            gap: 8px;
+            padding-right: 10px;
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 60px;
-            height: 34px;
+            width: 40px;
+            height: 24px;
         }
 
         .toggle-switch input {
@@ -111,16 +110,16 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 34px;
+            border-radius: 24px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
@@ -131,13 +130,13 @@
         }
 
         input:checked + .slider:before {
-            transform: translateX(26px);
+            transform: translateX(16px);
         }
 
         .toggle-label {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1em;
+            font-weight: 500;
+            color: #666;
+            font-size: 0.9em;
         }
 
         .comparison-container {
@@ -800,15 +799,54 @@
                 transition-duration: 0.01ms !important;
             }
         }
+
+        /* Make all emojis purple */
+        .header h1::before,
+        .header h1::after,
+        .state-selector h3::before,
+        .state-selector h3::after,
+        .calculate-btn::before,
+        .results h2::before,
+        .results h2::after,
+        .share-section h3::before,
+        .methodology-section h3::before,
+        .fun-facts h4::before,
+        .savings::before,
+        .savings::after {
+            color: #667eea !important;
+        }
+
+        /* Target emojis specifically */
+        .header h1,
+        .state-selector h3,
+        .calculate-btn,
+        .results h2,
+        .share-section h3,
+        .methodology-section h3,
+        .fun-facts h4,
+        .savings {
+            color: inherit;
+        }
+
+        .header h1 span,
+        .state-selector h3 span,
+        .calculate-btn span,
+        .results h2 span,
+        .share-section h3 span,
+        .methodology-section h3 span,
+        .fun-facts h4 span,
+        .savings span {
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
     <div class="tax-widget">
         <div class="header">
+            <h1><span>💰</span> State Tax Comparison</h1>
             <div class="cardiff-branding-header">
                 Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a>
             </div>
-            <h1>💰 State Tax Comparison</h1>
             <p>Compare your <strong>total state tax burden</strong> across different states and find your perfect tax haven!</p>
             <p style="font-size: 0.9em; color: #888; margin-top: 10px;">
                 <strong>What's included:</strong> State income tax, sales tax, and property tax estimates
@@ -825,7 +863,7 @@
 
         <div class="comparison-container">
             <div class="state-selector">
-                <h3>🏠 Current State</h3>
+                <h3><span>🏠</span> Current State</h3>
                 <select id="state1" class="state-select" aria-label="Select your current state">
                     <option value="">Select a state...</option>
                 </select>
@@ -839,7 +877,7 @@
             </div>
 
             <div class="state-selector">
-                <h3>🌴 Compare With</h3>
+                <h3><span>🌴</span> Compare With</h3>
                 <select id="state2" class="state-select" aria-label="Select state to compare with">
                     <option value="">Select a state...</option>
                 </select>
@@ -853,16 +891,16 @@
             </div>
         </div>
 
-        <button class="calculate-btn" onclick="calculateTaxes()">🚀 Calculate Tax Comparison</button>
+        <button class="calculate-btn" onclick="calculateTaxes()"><span>🚀</span> Calculate Tax Comparison</button>
 
         <div id="results" class="results">
-            <h2>📊 Your Tax Comparison Results</h2>
+            <h2><span>📊</span> Your Tax Comparison Results</h2>
             <div id="resultContent"></div>
             <div id="funFacts" class="fun-facts"></div>
         </div>
 
         <div style="background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 10px; padding: 20px; margin: 30px 0;">
-            <h3 style="color: #1565c0; margin-bottom: 15px;">💡 Quick Tips for Best Results</h3>
+            <h3 style="color: #1565c0; margin-bottom: 15px;"><span style="color: #667eea;">💡</span> Quick Tips for Best Results</h3>
             <ul style="color: #1976d2; line-height: 1.6; margin-left: 20px;">
                 <li><strong>Use the same income</strong> for both states to get a fair comparison</li>
                 <li><strong>Consider your lifestyle:</strong> High-income earners may benefit more from no-income-tax states</li>
@@ -873,7 +911,7 @@
         </div>
 
         <div class="share-section">
-            <h3>🚀 Share This Widget</h3>
+            <h3><span>🚀</span> Share This Widget</h3>
             <p>Want to add this tax calculator to your blog or website? Copy the embed code below!</p>
             
             <button class="copy-widget-btn" onclick="copyWidgetCode()">📋 Copy Widget Code</button>
@@ -913,7 +951,7 @@
         </div>
 
         <div class="methodology-section">
-            <h3>📊 Methodology & Tax Calculations</h3>
+            <h3><span>📊</span> Methodology & Tax Calculations</h3>
             
             <h4>What is "Tax Burden"?</h4>
             <p>For this calculator, <strong>"tax burden"</strong> refers to the total amount of state-level taxes you would pay annually, including income tax, sales tax, and property tax. This gives you a comprehensive view of your total state tax liability.</p>
@@ -1105,13 +1143,13 @@
                 state1Select.disabled = true;
                 state1Select.style.opacity = '0.6';
                 state1Select.style.cursor = 'not-allowed';
-                state1Label.innerHTML = '🏠 Current State (California)';
+                state1Label.innerHTML = '<span>🏠</span> Current State (California)';
             } else {
                 // Re-enable state selection
                 state1Select.disabled = false;
                 state1Select.style.opacity = '1';
                 state1Select.style.cursor = 'pointer';
-                state1Label.innerHTML = '🏠 Current State';
+                state1Label.innerHTML = '<span>🏠</span> Current State';
             }
         }
 
@@ -1197,7 +1235,7 @@
                     
                     sunDaysInfo = `
                         <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
-                            <h4 style="color: #856404; margin-bottom: 10px;">☀️ Sun Days Trade-off</h4>
+                            <h4 style="color: #856404; margin-bottom: 10px;"><span style="color: #667eea;">☀️</span> Sun Days Trade-off</h4>
                             <p style="color: #856404; margin-bottom: 0;">
                                 Moving to ${state2} means you'd <strong>${sunDaysChange} ${sunDaysAbs} days of sunshine</strong> per year.
                                 ${savings !== 0 ? `That's <strong>$${costPerDay}</strong> per day of sun!` : ''}
@@ -1212,7 +1250,7 @@
             if (savings > 0) {
                 summaryText = `
                     <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                        <h4 style="color: #155724; margin-bottom: 10px;">🎉 Tax Savings Opportunity!</h4>
+                        <h4 style="color: #155724; margin-bottom: 10px;"><span style="color: #667eea;">🎉</span> Tax Savings Opportunity!</h4>
                         <p style="color: #155724; margin-bottom: 0;">
                             At your income level, you could save <strong>$${savings.toLocaleString()}</strong> annually by moving to ${state2}. 
                             That's a <strong>${percentageDiff}% reduction</strong> in your state tax burden!
@@ -1222,7 +1260,7 @@
             } else if (savings < 0) {
                 summaryText = `
                     <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                        <h4 style="color: #721c24; margin-bottom: 10px;">💸 Higher Tax Burden</h4>
+                        <h4 style="color: #721c24; margin-bottom: 10px;"><span style="color: #667eea;">💸</span> Higher Tax Burden</h4>
                         <p style="color: #721c24; margin-bottom: 0;">
                             Moving to ${state2} would increase your state tax burden by <strong>$${Math.abs(savings).toLocaleString()}</strong> annually. 
                             That's a <strong>${percentageDiff}% increase</strong> in your state taxes.
@@ -1232,7 +1270,7 @@
             } else {
                 summaryText = `
                     <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                        <h4 style="color: #0c5460; margin-bottom: 10px;">⚖️ Similar Tax Burden</h4>
+                        <h4 style="color: #0c5460; margin-bottom: 10px;"><span style="color: #667eea;">⚖️</span> Similar Tax Burden</h4>
                         <p style="color: #0c5460; margin-bottom: 0;">
                             Both states have very similar tax burdens at your income level. The difference is minimal.
                         </p>
@@ -1268,11 +1306,11 @@
                 ${savings !== 0 ? 
                     `<div class="savings">
                         ${savings > 0 ? 
-                            `🎉 You could save $${savings.toLocaleString()} per year by moving to ${state2}!` :
-                            `💸 You would pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
+                            `<span>🎉</span> You could save $${savings.toLocaleString()} per year by moving to ${state2}!` :
+                            `<span>💸</span> You would pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
                         }
                     </div>` : 
-                    `<div class="savings">⚖️ Both states have very similar tax burdens at your income level.</div>`
+                    `<div class="savings"><span>⚖️</span> Both states have very similar tax burdens at your income level.</div>`
                 }
                 <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
                     <p style="margin-bottom: 0; color: rgba(255,255,255,0.9);">
@@ -1285,7 +1323,7 @@
             const fact = funFacts[state2] || funFacts[state1];
             if (fact) {
                 funFactsDiv.innerHTML = `
-                    <h4>💡 Fun Fact!</h4>
+                    <h4><span>💡</span> Fun Fact!</h4>
                     <p>${fact}</p>
                 `;
             } else {
