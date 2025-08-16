@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>State Tax Comparison Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .tax-widget {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tax-widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .cardiff-branding-header {
+            font-size: 0.9em;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .cardiff-branding-header a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .cardiff-branding-header a:hover {
+            text-decoration: underline;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .state-selector {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .state-selector:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .state-selector h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .state-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 16px;
+            padding-right: 30px;
+        }
+
+        .state-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .income-input {
+            margin-top: 15px;
+        }
+
+        .income-input label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .income-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .income-input input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .income-input input[type="number"]::-webkit-outer-spin-button,
+        .income-input input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .income-input input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .results {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .result-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .tax-breakdown {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tax-type {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .tax-amount {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .savings {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .share-section {
+            margin-top: 30px;
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .share-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .share-section h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .share-section p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .copy-widget-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .copy-widget-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .copy-widget-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        .copy-widget-btn.copied {
+            background: #28a745;
+            color: white;
+        }
+
+        .embed-code {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            word-break: break-all;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .copy-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .copy-btn.copied {
+            background: #28a745;
+            border-color: #28a745;
+        }
+
+        .embed-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 600px) {
+            .embed-options {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .embed-option {
+                display: none;
+            }
+            
+            .share-section h3 {
+                margin-bottom: 10px;
+            }
+            
+            .share-section p {
+                margin-bottom: 15px;
+            }
+        }
+
+        .embed-option {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .embed-option h4 {
+            color: white;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .embed-option p {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .embed-option .embed-code {
+            font-size: 0.8em;
+            margin: 10px 0;
+        }
+
+        .fun-facts {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .fun-facts h4 {
+            color: #d63031;
+            margin-bottom: 10px;
+        }
+
+        .fun-facts p {
+            color: #2d3436;
+            font-style: italic;
+        }
+
+        .cardiff-branding {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            border-top: 1px solid #e9ecef;
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .cardiff-branding a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .cardiff-branding a:hover {
+            text-decoration: underline;
+        }
+
+        .widget-disclaimer {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #ffc107;
+            color: #666;
+            font-size: 0.75em;
+            line-height: 1.4;
+        }
+
+        .widget-disclaimer strong {
+            color: #495057;
+        }
+
+        .methodology-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .methodology-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .methodology-section h4 {
+            color: #495057;
+            margin: 15px 0 8px 0;
+            font-size: 1.1em;
+        }
+
+        .methodology-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .methodology-section ul {
+            color: #666;
+            line-height: 1.6;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .methodology-section li {
+            margin-bottom: 5px;
+        }
+
+        .tax-breakdown-method {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .tax-breakdown-method h5 {
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .tax-breakdown-method p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .tax-widget {
+                padding: 20px;
+                border-radius: 15px;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .state-selector {
+                padding: 20px;
+            }
+            
+            .state-selector h3 {
+                font-size: 1.1em;
+            }
+            
+            .tax-breakdown {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .calculate-btn {
+                padding: 12px;
+                font-size: 1.1em;
+            }
+            
+            .results {
+                padding: 20px;
+            }
+            
+            .share-section {
+                padding: 20px;
+            }
+            
+            .embed-options {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .embed-option {
+                display: none;
+            }
+            
+            .embed-code {
+                font-size: 0.75em;
+                padding: 10px;
+                word-break: break-all;
+                white-space: pre-wrap;
+                line-height: 1.3;
+            }
+            
+            .copy-widget-btn {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .tax-widget {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .state-selector {
+                padding: 15px;
+            }
+            
+            .state-selector h3 {
+                font-size: 1em;
+            }
+            
+            .state-select, .income-input input {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            
+            .calculate-btn {
+                padding: 10px;
+                font-size: 1em;
+            }
+            
+            .results {
+                padding: 15px;
+            }
+            
+            .result-item {
+                padding: 12px;
+                margin: 10px 0;
+            }
+            
+            .tax-amount {
+                font-size: 1.3em;
+            }
+            
+            .share-section {
+                padding: 15px;
+            }
+            
+            .share-section h3 {
+                font-size: 1.2em;
+            }
+            
+            .embed-option {
+                padding: 12px;
+            }
+            
+            .embed-code {
+                font-size: 0.7em;
+                padding: 8px;
+                word-break: break-all;
+                white-space: pre-wrap;
+                line-height: 1.2;
+            }
+            
+            .widget-disclaimer {
+                font-size: 0.7em;
+                padding: 8px;
+            }
+            
+            .cardiff-branding {
+                font-size: 0.75em;
+                padding: 10px;
+            }
+            
+            .methodology-section {
+                padding: 20px;
+                margin-top: 20px;
+            }
+            
+            .methodology-section h3 {
+                font-size: 1.1em;
+            }
+            
+            .methodology-section h4 {
+                font-size: 1em;
+            }
+            
+            .methodology-section p {
+                font-size: 0.9em;
+            }
+            
+            .tax-breakdown-method {
+                padding: 12px;
+            }
+            
+            .tax-breakdown-method h5 {
+                font-size: 0.9em;
+            }
+            
+            .tax-breakdown-method p {
+                font-size: 0.85em;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .tax-widget {
+                border: 2px solid #000;
+            }
+            
+            .state-selector {
+                border: 2px solid #000;
+            }
+            
+            .results {
+                border: 2px solid #fff;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Make all emojis purple */
+        .header h1::before,
+        .header h1::after,
+        .state-selector h3::before,
+        .state-selector h3::after,
+        .calculate-btn::before,
+        .results h2::before,
+        .results h2::after,
+        .share-section h3::before,
+        .methodology-section h3::before,
+        .fun-facts h4::before,
+        .savings::before,
+        .savings::after {
+            color: #667eea !important;
+        }
+
+        /* Target emojis specifically */
+        .header h1,
+        .state-selector h3,
+        .calculate-btn,
+        .results h2,
+        .share-section h3,
+        .methodology-section h3,
+        .fun-facts h4,
+        .savings {
+            color: inherit;
+        }
+
+        .header h1 span,
+        .state-selector h3 span,
+        .calculate-btn span,
+        .results h2 span,
+        .share-section h3 span,
+        .methodology-section h3 span,
+        .fun-facts h4 span,
+        .savings span {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="tax-widget">
+        <div class="header">
+            <h1><span>💰</span> State Tax Comparison</h1>
+            <div class="cardiff-branding-header">
+                Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a>
+            </div>
+            <p>Compare your <strong>total state tax burden</strong> across different states and find your perfect tax haven!</p>
+            <p style="font-size: 0.9em; color: #888; margin-top: 10px;">
+                <strong>What's included:</strong> State income tax, sales tax, and property tax estimates
+            </p>
+        </div>
+
+        <div class="comparison-container">
+            <div class="state-selector">
+                <h3><span>🏠</span> Current State</h3>
+                <select id="state1" class="state-select" aria-label="Select your current state">
+                    <option value="">Select a state...</option>
+                </select>
+                <div class="income-input">
+                    <label for="income1">Annual Income ($)</label>
+                    <input type="number" id="income1" placeholder="Enter your annual income" value="75000" aria-describedby="income1-help">
+                    <small id="income1-help" style="color: #666; font-size: 0.8em; display: block; margin-top: 5px;">
+                        Enter your gross annual income before deductions
+                    </small>
+                </div>
+            </div>
+
+            <div class="state-selector">
+                <h3><span>🌴</span> Compare With</h3>
+                <select id="state2" class="state-select" aria-label="Select state to compare with">
+                    <option value="">Select a state...</option>
+                </select>
+                <div class="income-input">
+                    <label for="income2">Annual Income ($)</label>
+                    <input type="number" id="income2" placeholder="Enter your annual income" value="75000" aria-describedby="income2-help">
+                    <small id="income2-help" style="color: #666; font-size: 0.8em; display: block; margin-top: 5px;">
+                        Enter your gross annual income before deductions
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateTaxes()"><span>🚀</span> Calculate Tax Comparison</button>
+
+        <div id="results" class="results">
+            <h2><span>📊</span> Your Tax Comparison Results</h2>
+            <div id="resultContent"></div>
+            <div id="funFacts" class="fun-facts"></div>
+        </div>
+
+        <div style="background: #e3f2fd; border: 1px solid #bbdefb; border-radius: 10px; padding: 20px; margin: 30px 0;">
+            <h3 style="color: #1565c0; margin-bottom: 15px;"><span style="color: #667eea;">💡</span> Quick Tips for Best Results</h3>
+            <ul style="color: #1976d2; line-height: 1.6; margin-left: 20px;">
+                <li><strong>Use the same income</strong> for both states to get a fair comparison</li>
+                <li><strong>Consider your lifestyle:</strong> High-income earners may benefit more from no-income-tax states</li>
+                <li><strong>Think about property:</strong> If you rent, property tax differences won't affect you directly</li>
+                <li><strong>Remember local taxes:</strong> This calculator uses state averages - your actual rates may vary</li>
+                <li><strong>Plan for the long term:</strong> Tax rates change, so use this for general planning only</li>
+            </ul>
+        </div>
+
+        <div class="share-section">
+            <h3><span>🚀</span> Share This Widget</h3>
+            <p>Want to add this tax calculator to your blog or website? Copy the embed code below!</p>
+            
+            <button class="copy-widget-btn" onclick="copyWidgetCode()">📋 Copy Widget Code</button>
+            
+            <div class="embed-options">
+                <div class="embed-option">
+                    <h4>📱 Standard Widget</h4>
+                    <p>Perfect for most websites</p>
+                    <div class="embed-code" id="standardEmbed">
+                        &lt;iframe src="https://oneOoneData.github.io/StateTaxWidget/widget.html" width="100%" height="500" frameborder="0"&gt;&lt;/iframe&gt;
+                    </div>
+                    <button class="copy-btn" onclick="copySpecificCode('standardEmbed')">Copy</button>
+                </div>
+                
+                <div class="embed-option">
+                    <h4>📊 Large Widget</h4>
+                    <p>For detailed comparisons</p>
+                    <div class="embed-code" id="largeEmbed">
+                        &lt;iframe src="https://oneOoneData.github.io/StateTaxWidget/widget.html" width="100%" height="600" frameborder="0"&gt;&lt;/iframe&gt;
+                    </div>
+                    <button class="copy-btn" onclick="copySpecificCode('largeEmbed')">Copy</button>
+                </div>
+                
+                <div class="embed-option">
+                    <h4>📝 Compact Widget</h4>
+                    <p>For sidebars and small spaces</p>
+                    <div class="embed-code" id="compactEmbed">
+                        &lt;iframe src="https://oneOoneData.github.io/StateTaxWidget/widget.html" width="400" height="400" frameborder="0"&gt;&lt;/iframe&gt;
+                    </div>
+                    <button class="copy-btn" onclick="copySpecificCode('compactEmbed')">Copy</button>
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.8;">
+                💡 <strong>Ready to use!</strong> The embed codes above are already configured with your GitHub Pages domain.
+            </p>
+        </div>
+
+        <div class="methodology-section">
+            <h3><span>📊</span> Methodology & Tax Calculations</h3>
+            
+            <h4>What is "Tax Burden"?</h4>
+            <p>For this calculator, <strong>"tax burden"</strong> refers to the total amount of state-level taxes you would pay annually, including income tax, sales tax, and property tax. This gives you a comprehensive view of your total state tax liability.</p>
+            
+            <h4>Taxes Included in Our Comparison</h4>
+            <p>Our calculator considers the three major state-level taxes that most individuals encounter:</p>
+            
+            <div class="tax-breakdown-method">
+                <h5>💰 State Income Tax</h5>
+                <p><strong>Calculation:</strong> Annual Income × State Income Tax Rate</p>
+                <p><strong>Data Source:</strong> State tax brackets and rates as of 2025</p>
+                <p><strong>Assumption:</strong> We use the highest marginal rate for simplicity. Actual rates may vary based on income brackets and filing status.</p>
+                <p><strong>What's NOT included:</strong> Federal income tax, local income taxes, or state-specific deductions and credits</p>
+            </div>
+            
+            <div class="tax-breakdown-method">
+                <h5>🛒 State Sales Tax</h5>
+                <p><strong>Calculation:</strong> (Annual Income × 30%) × State Sales Tax Rate</p>
+                <p><strong>Assumption:</strong> 30% of annual income is spent on taxable goods and services</p>
+                <p><strong>What's NOT included:</strong> Local sales tax variations, exempt items (groceries, prescription drugs), or online purchases</p>
+                <p><strong>Note:</strong> Many states have varying local sales tax rates. We use state-level rates only.</p>
+            </div>
+            
+            <div class="tax-breakdown-method">
+                <h5>🏠 Property Tax</h5>
+                <p><strong>Calculation:</strong> (Annual Income × 25%) × State Property Tax Rate</p>
+                <p><strong>Assumption:</strong> Property value is approximately 25% of annual income</p>
+                <p><strong>What's NOT included:</strong> Local property tax variations, homestead exemptions, or special assessments</p>
+                <p><strong>Note:</strong> Property tax rates vary by county and municipality. We use state averages.</p>
+            </div>
+            
+            <h4>Key Assumptions & Limitations</h4>
+            <ul>
+                <li><strong>Filing Status:</strong> Assumes single filer with no dependents</li>
+                <li><strong>Deductions:</strong> Uses standard deduction; no itemized deductions or credits</li>
+                <li><strong>Income Distribution:</strong> Assumes income is evenly earned throughout the year</li>
+                <li><strong>Simplified Rates:</strong> Uses flat rates rather than progressive tax brackets for income tax</li>
+                <li><strong>Local Variations:</strong> Local taxes, fees, and special assessments are not included</li>
+                <li><strong>Dynamic Rates:</strong> Tax rates change frequently and may differ from our data</li>
+                <li><strong>Property Ownership:</strong> Assumes you own property; renters would have different tax implications</li>
+            </ul>
+            
+            <h4>When to Use This Calculator</h4>
+            <p>This tool is best used for:</p>
+            <ul>
+                <li><strong>General Planning:</strong> Getting a rough idea of tax differences between states</li>
+                <li><strong>Comparison Shopping:</strong> Identifying states with generally higher or lower tax burdens</li>
+                <li><strong>Initial Research:</strong> Starting point for more detailed tax planning</li>
+            </ul>
+            
+            <h4>When NOT to Use This Calculator</h4>
+            <p>This tool is NOT suitable for:</p>
+            <ul>
+                <li><strong>Precise Tax Planning:</strong> Final tax decisions or detailed financial planning</li>
+                <li><strong>Complex Situations:</strong> Business owners, multiple income sources, or complex deductions</li>
+                <li><strong>Legal Advice:</strong> Tax compliance or legal tax matters</li>
+            </ul>
+            
+            <h4>Why These Assumptions?</h4>
+            <p>We use these simplified assumptions to provide a quick, comparable estimate across states. While not perfect, this approach helps identify states with generally higher or lower tax burdens for planning purposes.</p>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin: 20px 0;">
+                <h5 style="color: #856404; margin-bottom: 10px;">⚠️ Important Disclaimer</h5>
+                <p style="color: #856404; margin-bottom: 0;">
+                    <strong>For accurate tax planning:</strong> Always consult with a qualified tax professional who can consider your specific circumstances, deductions, and local tax variations. This calculator provides estimates only and should not be considered as tax advice.
+                </p>
+            </div>
+        </div>
+
+        <div class="widget-disclaimer">
+            <strong>⚠️ Important Disclaimer:</strong> This calculator provides estimates only and should not be considered as tax advice. Tax rates and regulations change frequently. Please consult with a qualified tax professional for personalized advice. <strong>Data last updated: January 2025</strong>
+        </div>
+
+        <div class="cardiff-branding">
+            Powered by <a href="https://www.cardifftax.com" target="_blank">Cardiff Tax Pros</a> - <a href="https://www.cardifftax.com" target="_blank">www.cardifftax.com</a>
+        </div>
+    </div>
+
+    <script>
+        // State tax data (simplified for demo - you can expand this)
+        const stateTaxData = {
+            'Alabama': { income: 0.05, sales: 0.04, property: 0.004 },
+            'Alaska': { income: 0, sales: 0, property: 0.009 },
+            'Arizona': { income: 0.045, sales: 0.056, property: 0.006 },
+            'Arkansas': { income: 0.055, sales: 0.065, property: 0.006 },
+            'California': { income: 0.133, sales: 0.0725, property: 0.007 },
+            'Colorado': { income: 0.044, sales: 0.029, property: 0.005 },
+            'Connecticut': { income: 0.0699, sales: 0.0635, property: 0.018 },
+            'Delaware': { income: 0.066, sales: 0, property: 0.005 },
+            'Florida': { income: 0, sales: 0.06, property: 0.009 },
+            'Georgia': { income: 0.0575, sales: 0.04, property: 0.009 },
+            'Hawaii': { income: 0.11, sales: 0.04, property: 0.002 },
+            'Idaho': { income: 0.058, sales: 0.06, property: 0.007 },
+            'Illinois': { income: 0.0495, sales: 0.0625, property: 0.021 },
+            'Indiana': { income: 0.0323, sales: 0.07, property: 0.008 },
+            'Iowa': { income: 0.0575, sales: 0.06, property: 0.014 },
+            'Kansas': { income: 0.057, sales: 0.065, property: 0.011 },
+            'Kentucky': { income: 0.045, sales: 0.06, property: 0.008 },
+            'Louisiana': { income: 0.0425, sales: 0.0445, property: 0.005 },
+            'Maine': { income: 0.0715, sales: 0.055, property: 0.013 },
+            'Maryland': { income: 0.0575, sales: 0.06, property: 0.011 },
+            'Massachusetts': { income: 0.05, sales: 0.0625, property: 0.011 },
+            'Michigan': { income: 0.0425, sales: 0.06, property: 0.014 },
+            'Minnesota': { income: 0.0985, sales: 0.06875, property: 0.011 },
+            'Mississippi': { income: 0.05, sales: 0.07, property: 0.008 },
+            'Missouri': { income: 0.0495, sales: 0.04225, property: 0.009 },
+            'Montana': { income: 0.068, sales: 0, property: 0.008 },
+            'Nebraska': { income: 0.0664, sales: 0.055, property: 0.016 },
+            'Nevada': { income: 0, sales: 0.0685, property: 0.006 },
+            'New Hampshire': { income: 0.05, sales: 0, property: 0.018 },
+            'New Jersey': { income: 0.1075, sales: 0.06625, property: 0.021 },
+            'New Mexico': { income: 0.059, sales: 0.05125, property: 0.007 },
+            'New York': { income: 0.109, sales: 0.04, property: 0.015 },
+            'North Carolina': { income: 0.0499, sales: 0.0475, property: 0.008 },
+            'North Dakota': { income: 0.029, sales: 0.05, property: 0.009 },
+            'Ohio': { income: 0.0399, sales: 0.0575, property: 0.014 },
+            'Oklahoma': { income: 0.0475, sales: 0.045, property: 0.007 },
+            'Oregon': { income: 0.099, sales: 0, property: 0.009 },
+            'Pennsylvania': { income: 0.0307, sales: 0.06, property: 0.015 },
+            'Rhode Island': { income: 0.0599, sales: 0.07, property: 0.014 },
+            'South Carolina': { income: 0.07, sales: 0.06, property: 0.005 },
+            'South Dakota': { income: 0, sales: 0.045, property: 0.012 },
+            'Tennessee': { income: 0, sales: 0.07, property: 0.007 },
+            'Texas': { income: 0, sales: 0.0625, property: 0.018 },
+            'Utah': { income: 0.0485, sales: 0.061, property: 0.006 },
+            'Vermont': { income: 0.0875, sales: 0.06, property: 0.018 },
+            'Virginia': { income: 0.0575, sales: 0.053, property: 0.008 },
+            'Washington': { income: 0, sales: 0.065, property: 0.009 },
+            'West Virginia': { income: 0.065, sales: 0.06, property: 0.005 },
+            'Wisconsin': { income: 0.0765, sales: 0.05, property: 0.015 },
+            'Wyoming': { income: 0, sales: 0.04, property: 0.006 }
+        };
+
+        // Fun facts about states
+        const funFacts = {
+            'Alaska': "Alaska has no state income tax AND pays residents a dividend from oil revenues!",
+            'Florida': "Florida has no state income tax - perfect for retirees!",
+            'Texas': "Texas has no state income tax but higher property taxes to compensate.",
+            'Nevada': "Nevada has no state income tax and is famous for its entertainment industry.",
+            'Wyoming': "Wyoming has no state income tax and the lowest population density in the US.",
+            'California': "California has the highest state income tax rate but beautiful weather year-round.",
+            'New York': "New York has high taxes but offers world-class amenities and opportunities.",
+            'Hawaii': "Hawaii has high taxes but you get to live in paradise!",
+            'Delaware': "Delaware has no sales tax - great for shopping!",
+            'Oregon': "Oregon has no sales tax but higher income taxes to compensate."
+        };
+
+        // Populate state dropdowns
+        function populateStates() {
+            const states = Object.keys(stateTaxData).sort();
+            const state1Select = document.getElementById('state1');
+            const state2Select = document.getElementById('state2');
+            
+            // Clear existing options
+            state1Select.innerHTML = '<option value="">Select a state...</option>';
+            state2Select.innerHTML = '<option value="">Select a state...</option>';
+            
+            states.forEach(state => {
+                const option1 = new Option(state, state);
+                const option2 = new Option(state, state);
+                state1Select.add(option1);
+                state2Select.add(option2);
+            });
+        }
+
+        // Calculate taxes
+        function calculateTaxes() {
+            const state1 = document.getElementById('state1').value;
+            const state2 = document.getElementById('state2').value;
+            const income1 = parseFloat(document.getElementById('income1').value) || 0;
+            const income2 = parseFloat(document.getElementById('income2').value) || 0;
+
+            if (!state1 || !state2) {
+                alert('Please select both states to compare!');
+                return;
+            }
+
+            if (income1 <= 0 || income2 <= 0) {
+                alert('Please enter valid income amounts greater than $0!');
+                return;
+            }
+
+            // Show loading state
+            const calculateBtn = document.querySelector('.calculate-btn');
+            const originalText = calculateBtn.textContent;
+            calculateBtn.textContent = '🔄 Calculating...';
+            calculateBtn.disabled = true;
+
+            // Simulate a small delay for better UX
+            setTimeout(() => {
+                try {
+                    const taxes1 = calculateStateTaxes(state1, income1);
+                    const taxes2 = calculateStateTaxes(state2, income2);
+                    const total1 = taxes1.income + taxes1.sales + taxes1.property;
+                    const total2 = taxes2.income + taxes2.sales + taxes2.property;
+                    const savings = total1 - total2;
+
+                    displayResults(state1, state2, taxes1, taxes2, total1, total2, savings);
+                } catch (error) {
+                    console.error('Error calculating taxes:', error);
+                    alert('An error occurred while calculating taxes. Please try again.');
+                } finally {
+                    // Reset button
+                    calculateBtn.textContent = originalText;
+                    calculateBtn.disabled = false;
+                }
+            }, 500);
+        }
+
+        // Calculate taxes for a specific state
+        function calculateStateTaxes(state, income) {
+            const data = stateTaxData[state];
+            const incomeTax = income * data.income;
+            const salesTax = income * 0.3 * data.sales; // Assume 30% of income goes to taxable purchases
+            const propertyTax = income * 0.25 * data.property; // Assume property value is 25% of income
+
+            return {
+                income: incomeTax,
+                sales: salesTax,
+                property: propertyTax
+            };
+        }
+
+        // Display results
+        function displayResults(state1, state2, taxes1, taxes2, total1, total2, savings) {
+            const resultsDiv = document.getElementById('results');
+            const contentDiv = document.getElementById('resultContent');
+            const funFactsDiv = document.getElementById('funFacts');
+
+            // Calculate percentage difference
+            const percentageDiff = ((Math.abs(savings) / total1) * 100).toFixed(1);
+            
+            // Create interpretive summary
+            let summaryText = '';
+            if (savings > 0) {
+                summaryText = `
+                    <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #155724; margin-bottom: 10px;"><span style="color: #667eea;">🎉</span> Tax Savings Opportunity!</h4>
+                        <p style="color: #155724; margin-bottom: 0;">
+                            At your income level, you could save <strong>$${savings.toLocaleString()}</strong> annually by moving to ${state2}. 
+                            That's a <strong>${percentageDiff}% reduction</strong> in your state tax burden!
+                        </p>
+                    </div>
+                `;
+            } else if (savings < 0) {
+                summaryText = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #721c24; margin-bottom: 10px;"><span style="color: #667eea;">💸</span> Higher Tax Burden</h4>
+                        <p style="color: #721c24; margin-bottom: 0;">
+                            Moving to ${state2} would increase your state tax burden by <strong>$${Math.abs(savings).toLocaleString()}</strong> annually. 
+                            That's a <strong>${percentageDiff}% increase</strong> in your state taxes.
+                        </p>
+                    </div>
+                `;
+            } else {
+                summaryText = `
+                    <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                        <h4 style="color: #0c5460; margin-bottom: 10px;"><span style="color: #667eea;">⚖️</span> Similar Tax Burden</h4>
+                        <p style="color: #0c5460; margin-bottom: 0;">
+                            Both states have very similar tax burdens at your income level. The difference is minimal.
+                        </p>
+                    </div>
+                `;
+            }
+
+            contentDiv.innerHTML = `
+                ${summaryText}
+                <div class="tax-breakdown">
+                    <div class="result-item">
+                        <h4>${state1}</h4>
+                        <div class="tax-amount">$${total1.toLocaleString()}</div>
+                        <div class="tax-type">Income Tax: $${taxes1.income.toLocaleString()}</div>
+                        <div class="tax-type">Sales Tax: $${taxes1.sales.toLocaleString()}</div>
+                        <div class="tax-type">Property Tax: $${taxes1.property.toLocaleString()}</div>
+                        <small style="color: rgba(255,255,255,0.8); display: block; margin-top: 8px;">
+                            Total annual state tax burden
+                        </small>
+                    </div>
+                    <div class="result-item">
+                        <h4>${state2}</h4>
+                        <div class="tax-amount">$${total2.toLocaleString()}</div>
+                        <div class="tax-type">Income Tax: $${taxes2.income.toLocaleString()}</div>
+                        <div class="tax-type">Sales Tax: $${taxes2.sales.toLocaleString()}</div>
+                        <div class="tax-type">Property Tax: $${taxes2.property.toLocaleString()}</div>
+                        <small style="color: rgba(255,255,255,0.8); display: block; margin-top: 8px;">
+                            Total annual state tax burden
+                        </small>
+                    </div>
+                </div>
+                ${savings !== 0 ? 
+                    `<div class="savings">
+                        ${savings > 0 ? 
+                            `<span>🎉</span> You could save $${savings.toLocaleString()} per year by moving to ${state2}!` :
+                            `<span>💸</span> You would pay $${Math.abs(savings).toLocaleString()} more per year in ${state2}.`
+                        }
+                    </div>` : 
+                    `<div class="savings"><span>⚖️</span> Both states have very similar tax burdens at your income level.</div>`
+                }
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
+                    <p style="margin-bottom: 0; color: rgba(255,255,255,0.9);">
+                        <strong>💡 Remember:</strong> These are estimates based on simplified assumptions. Your actual tax burden may vary based on your specific circumstances, deductions, and local tax rates.
+                    </p>
+                </div>
+            `;
+
+            // Add fun fact if available
+            const fact = funFacts[state2] || funFacts[state1];
+            if (fact) {
+                funFactsDiv.innerHTML = `
+                    <h4><span>💡</span> Fun Fact!</h4>
+                    <p>${fact}</p>
+                `;
+            } else {
+                funFactsDiv.innerHTML = '';
+            }
+
+            resultsDiv.classList.add('show');
+        }
+
+        // Copy widget code (main button)
+        function copyWidgetCode() {
+            const embedCode = document.getElementById('standardEmbed').textContent;
+            navigator.clipboard.writeText(embedCode).then(() => {
+                const btn = document.querySelector('.copy-widget-btn');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Widget Code';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = embedCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const btn = document.querySelector('.copy-widget-btn');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Widget Code';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Copy specific embed code
+        function copySpecificCode(elementId) {
+            const embedCode = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(embedCode).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = embedCode;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Initialize the widget
+        document.addEventListener('DOMContentLoaded', function() {
+            populateStates();
+            
+            // Add some interactivity
+            document.querySelectorAll('.state-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.borderColor = '#667eea';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
