@@ -13,14 +13,6 @@ const nextConfig = {
       },
     },
   },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': '.',
-      '@lib': './lib',
-    };
-    return config;
-  },
 };
 
 module.exports = nextConfig;

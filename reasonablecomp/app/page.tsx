@@ -3,10 +3,10 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CalcRequestSchema, Roles } from "@lib/calc/types";
-import { computeComp } from "@lib/calc/calc";
-import ResultCard from "@/components/ResultCard";
-import { Input, Select, Section, Row, Label } from "@/components/Field";
+import { CalcRequestSchema, Roles } from "../src/types";
+import { computeComp } from "../src/calc";
+import ResultCard from "../components/ResultCard";
+import { Input, Select, Section, Row, Label } from "../components/Field";
 
 const FormSchema = CalcRequestSchema;
 
