@@ -34,10 +34,15 @@ jobs:
         cd reasonablecomp
         npm run build
     
+    - name: Prepare deployment files
+      run: |
+        mkdir -p deploy
+        cp -r reasonablecomp/out/* deploy/
+    
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.PAT_TOKEN }}
-        publish_dir: reasonablecomp/out
+        publish_dir: deploy
         destination_dir: reasonablecomp
         force_orphan: true 
