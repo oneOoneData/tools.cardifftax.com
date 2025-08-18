@@ -1,0 +1,5 @@
+{
+  "CA": { "exec":145000, "admin":52000, "bookkeeping":61000, "sales":78000, "ops":69000, "tech":98000 },
+  "TX": { "exec":125000, "admin":43000, "bookkeeping":52000, "sales":65000, "ops":59000, "tech":88000 },
+  "NY": { "exec":150000, "admin":54000, "bookkeeping":64000, "sales":82000, "ops":71000, "tech":102000 }
+} 
