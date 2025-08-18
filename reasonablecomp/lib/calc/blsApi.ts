@@ -116,7 +116,7 @@ export class BLSAPIClient {
 
   constructor() {
     this.config = {
-      baseUrl: '/api/bls', // Local API route
+      baseUrl: 'https://api.bls.gov/publicAPI/v2/timeseries/data/', // Direct BLS API (note: requires server-side for CORS)
       maxRequestsPerDay: 25, // 25 requests/day without API key
     };
   }

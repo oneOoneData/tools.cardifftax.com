@@ -1,19 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-
-interface GlassdoorRequest {
-  jobTitle: string;
-  location: string;
-  limit: number;
-}
-
-interface GlassdoorResponse {
-  success: boolean;
-  data?: any[];
-  error?: string;
-}
-
 // Market-based salary ranges for different roles and states
-const MARKET_SALARIES = {
+export const MARKET_SALARIES = {
   exec: {
     CA: { median: 180000, low: 150000, high: 250000 },
     NY: { median: 190000, low: 160000, high: 270000 },
@@ -58,20 +44,28 @@ const MARKET_SALARIES = {
   }
 };
 
-export async function POST(request: NextRequest): Promise<NextResponse<GlassdoorResponse>> {
-  try {
-    const body: GlassdoorRequest = await request.json();
-    const { jobTitle, location, limit } = body;
+export interface GlassdoorRequest {
+  jobTitle: string;
+  location: string;
+  limit: number;
+}
 
-    console.log(`Glassdoor API: Received request for ${jobTitle} in ${location}`);
+export interface GlassdoorResponse {
+  success: boolean;
+  data?: any[];
+  error?: string;
+}
+
+export function getGlassdoorData(request: GlassdoorRequest): GlassdoorResponse {
+  try {
+    const { jobTitle, location, limit } = request;
 
     // Validate inputs
     if (!jobTitle || !location) {
-      console.log(`Glassdoor API: Missing required fields - jobTitle: ${jobTitle}, location: ${location}`);
-      return NextResponse.json({
+      return {
         success: false,
         error: 'Missing required fields: jobTitle, location'
-      }, { status: 400 });
+      };
     }
 
     // Map job titles to our role categories
@@ -100,24 +94,18 @@ export async function POST(request: NextRequest): Promise<NextResponse<Glassdoor
     // First try exact match
     if (roleMap[jobTitle.toLowerCase()]) {
       roleKey = roleMap[jobTitle.toLowerCase()];
-      console.log(`Glassdoor API: Exact match found for ${jobTitle} -> ${roleKey}`);
     } else {
       // Then try partial matches
       for (const [key, role] of Object.entries(roleMap)) {
         if (jobTitle.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(jobTitle.toLowerCase())) {
           roleKey = role;
-          console.log(`Glassdoor API: Partial match found for ${jobTitle} -> ${key} -> ${roleKey}`);
           break;
         }
       }
     }
 
-    console.log(`Glassdoor API: Using role key: ${roleKey} for job title: ${jobTitle}`);
-
     const stateData = MARKET_SALARIES[roleKey][location as keyof typeof MARKET_SALARIES[typeof roleKey]] || 
                      MARKET_SALARIES[roleKey].CA; // Default to CA if state not found
-
-    console.log(`Glassdoor API: State data for ${roleKey} in ${location}:`, stateData);
 
     // Add some realistic variation to the data
     const variation = 0.15; // 15% variation
@@ -141,23 +129,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<Glassdoor
       };
     });
 
-    return NextResponse.json({
+    return {
       success: true,
       data: jobs
-    });
+    };
 
   } catch (error) {
-    console.error('Glassdoor API error:', error);
-    return NextResponse.json({
+    return {
       success: false,
       error: error instanceof Error ? error.message : 'Internal server error'
-    }, { status: 500 });
+    };
   }
-}
-
-export async function GET(): Promise<NextResponse> {
-  return NextResponse.json({
-    message: 'Glassdoor Market Data API endpoint - use POST with jobTitle and location',
-    note: 'Provides realistic market-based salary data with required Glassdoor attribution'
-  });
 }

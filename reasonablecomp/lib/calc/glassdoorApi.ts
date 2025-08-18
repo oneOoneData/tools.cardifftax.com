@@ -1,6 +1,8 @@
 // Glassdoor API Integration for Live Market Data
 // https://www.glassdoor.com/developer/index.htm
 
+import { getGlassdoorData, GlassdoorRequest, GlassdoorResponse } from '../glassdoorData';
+
 export interface GlassdoorJob {
   jobTitle: string;
   payMedian: number;
@@ -12,15 +14,7 @@ export interface GlassdoorJob {
   lastUpdated: string;
 }
 
-export interface GlassdoorResponse {
-  success: boolean;
-  data?: GlassdoorJob[];
-  error?: string;
-}
-
 export class GlassdoorAPIClient {
-  private baseUrl = 'https://api.glassdoor.com/api/api.htm';
-
   constructor() {
     // No API key required - Glassdoor provides free access
   }
@@ -31,34 +25,23 @@ export class GlassdoorAPIClient {
     limit: number = 10
   ): Promise<GlassdoorJob[]> {
     try {
-      // Note: Glassdoor API requires server-side calls due to CORS restrictions
-      // This would need to be implemented as a server-side API route
-      const response = await fetch('/api/glassdoor', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          jobTitle,
-          location,
-          limit,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Glassdoor API error: ${response.status}`);
-      }
-
-      const data: GlassdoorResponse = await response.json();
+      // Use client-side function instead of API route
+      const request: GlassdoorRequest = {
+        jobTitle,
+        location,
+        limit,
+      };
+      
+      const data: GlassdoorResponse = getGlassdoorData(request);
       
       if (data.success && data.data) {
         return data.data;
       } else {
-        console.warn('Glassdoor API returned no data:', data.error);
+        console.warn('Glassdoor data returned no results:', data.error);
         return [];
       }
     } catch (error) {
-      console.error('Error fetching Glassdoor data:', error);
+      console.error('Error getting Glassdoor data:', error);
       return [];
     }
   }
