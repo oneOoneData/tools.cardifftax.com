@@ -22,12 +22,12 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: reasonablecomp/package-lock.json
+        cache-dependency-path: reasonablecomp/package.json
     
     - name: Install dependencies
       run: |
         cd reasonablecomp
-        npm ci
+        npm install
     
     - name: Build Next.js app
       run: |
