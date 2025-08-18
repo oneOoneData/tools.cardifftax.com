@@ -28,12 +28,25 @@ export const CalcRequestSchema = z.object({
   benefits: z.object({
     include: z.boolean(),
     estimatedAnnual: z.number().nonnegative().default(0)
-  })
+  }),
+  approach: z.enum(["market", "cost"]).default("market"),
+  costApproach: z.object({
+    hourlyRate: z.number().positive(),
+    overheadPercentage: z.number().min(0).max(100).default(30),
+    profitMargin: z.number().min(0).max(100).default(20)
+  }).optional()
 });
 export type CalcRequest = z.infer<typeof CalcRequestSchema>;
 
 export const CalcResultSchema = z.object({
-  marketComposite: z.number(),
+  approach: z.enum(["market", "cost"]),
+  marketComposite: z.number().optional(),
+  costBreakdown: z.object({
+    baseHourly: z.number(),
+    overhead: z.number(),
+    profit: z.number(),
+    totalHourly: z.number()
+  }).optional(),
   modifiers: z.object({
     experience: z.number(),
     companySize: z.number(),
