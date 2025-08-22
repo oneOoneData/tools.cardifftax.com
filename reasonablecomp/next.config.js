@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'export',
   trailingSlash: true,
   basePath: '/reasonablecomp',
+  assetPrefix: '/reasonablecomp/',
   images: {
     unoptimized: true
   },
