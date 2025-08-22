@@ -41,6 +41,7 @@ jobs:
           rm -rf dist
           mkdir -p dist/statetax dist/reasonablecomp
           echo "tools.cardifftax.com" > dist/CNAME
+          : > dist/.nojekyll               # <-- disable Jekyll
           
           # Copy existing statetax files (already working)
           cp -a statetax/* dist/statetax/
