@@ -68,31 +68,6 @@ const Field = ({ label, type, value, onChange, placeholder, required = false, op
 };
 
 export default function Home() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-[#243549] text-gray-100">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-white mb-4">S-Corp Compensation Calculator</h1>
-            <p className="text-xl text-gray-300">Professional compensation analysis for S-Corporation owners</p>
-          </div>
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-8 bg-gray-700 rounded w-1/3 mx-auto mb-4"></div>
-              <div className="h-4 bg-gray-700 rounded w-1/2 mx-auto"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return <ClientForm />;
 }
 
@@ -499,7 +474,7 @@ function ClientForm() {
                 ) : (
                   <div className="flex items-center space-x-2 text-yellow-400">
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                     </svg>
                     <span>Invalid Distribution ⚠️ Role distribution must equal exactly 100%. Current total: {(totalRoleMix * 100).toFixed(1)}%</span>
                   </div>
