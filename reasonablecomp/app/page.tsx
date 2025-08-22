@@ -197,7 +197,7 @@ function ClientForm() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-6">
             <img 
-              src="/cardiff tax pros og image.png" 
+              src="cardiff tax pros og image.png" 
               alt="Cardiff Tax Pros" 
               className="h-16 w-auto mr-4"
             />
@@ -625,7 +625,7 @@ function ClientForm() {
         <footer className="mt-16 pt-8 border-t border-gray-600/50 text-center">
           <div className="flex items-center justify-center space-x-4 mb-4">
             <img 
-              src="/cardiff tax pros og image.png" 
+              src="cardiff tax pros og image.png" 
               alt="Cardiff Tax Pros" 
               className="h-8 w-auto opacity-80 hover:opacity-100 transition-opacity duration-200 cursor-pointer"
               onClick={() => window.open('https://www.cardifftax.com', '_blank')}
