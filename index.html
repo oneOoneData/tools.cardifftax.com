@@ -1,14 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Cardiff Tax Tools</title>
+  <meta charset="utf-8" />
+  <title>Cardiff Tax Tools — Free Tax Calculators by Cardiff Tax Pros</title>
+  <meta name="description" content="Free, no-signup tax calculators from Cardiff Tax Pros in North County San Diego. Estimate state tax savings and determine a reasonable S-Corp salary in minutes." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="canonical" href="https://tools.cardifftax.com/" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="Cardiff Tax Tools — Free Tax Calculators" />
+  <meta property="og:description" content="Estimate state tax savings and calculate reasonable S-Corp compensation. Built by Cardiff Tax Pros." />
+  <meta property="og:url" content="https://tools.cardifftax.com/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Minimal critical CSS -->
+  <style>
+    :root{--bg:#ffffff;--ink:#0f172a;--muted:#475569;--accent:#0ea5e9}
+    *{box-sizing:border-box}html,body{margin:0;padding:0}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+    a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+    nav a{margin-left:16px}
+    .hero{padding:28px 0 8px}
+    .hero h1{font-size:clamp(28px,5vw,40px);margin:0 0 8px}
+    .hero p{color:var(--muted);max-width:70ch;margin:0}
+    .grid{display:grid;gap:16px;margin:28px 0;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+    .card{border:1px solid #e5e7eb;border-radius:16px;padding:18px}
+    .card h2{margin:0 0 6px;font-size:20px}
+    .card p{margin:8px 0 14px;color:var(--muted)}
+    .btn{display:inline-block;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;font-weight:600}
+    .pill{display:inline-block;background:#e6f6fe;color:#0369a1;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:8px}
+    .two-col{display:grid;gap:20px;grid-template-columns:1.1fr 1fr}
+    @media (max-width:900px){.two-col{grid-template-columns:1fr}}
+    .faq dt{font-weight:700;margin-top:12px}
+    .faq dd{margin:6px 0 12px;color:var(--muted)}
+    footer{border-top:1px solid #e5e7eb;margin-top:28px;padding-top:16px;color:var(--muted);font-size:14px}
+  </style>
+
+  <!-- JSON-LD: WebSite + ItemList of calculators -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Cardiff Tax Tools",
+    "url": "https://tools.cardifftax.com/",
+    "publisher": { "@type": "Organization", "name": "Cardiff Tax Pros", "url": "https://www.cardifftax.com/" },
+    "potentialAction": { "@type": "SearchAction", "target": "https://tools.cardifftax.com/?q={search_term_string}", "query-input": "required name=search_term_string" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"ItemList",
+    "name":"Tax Calculators",
+    "itemListElement":[
+      {
+        "@type":"ListItem","position":1,
+        "item":{
+          "@type":"SoftwareApplication",
+          "applicationCategory":"FinanceApplication",
+          "name":"State Tax Savings Estimator",
+          "operatingSystem":"Web",
+          "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+          "url":"https://tools.cardifftax.com/statetax/",
+          "description":"Estimate potential state income tax savings when moving or planning residency.",
+          "publisher":{"@type":"Organization","name":"Cardiff Tax Pros"}
+        }
+      },
+      {
+        "@type":"ListItem","position":2,
+        "item":{
+          "@type":"SoftwareApplication",
+          "applicationCategory":"FinanceApplication",
+          "name":"Reasonable Compensation Calculator",
+          "operatingSystem":"Web",
+          "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+          "url":"https://tools.cardifftax.com/reasonablecomp/",
+          "description":"Estimate an S-Corp reasonable salary to balance payroll tax and distributions.",
+          "publisher":{"@type":"Organization","name":"Cardiff Tax Pros"}
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
-  <h1>Cardiff Tax Tools</h1>
-  <ul>
-    <li><a href="/statetax/">State Tax Savings Estimator</a></li>
-    <li><a href="/reasonablecomp/">Reasonable Compensation Calculator</a></li>
-  </ul>
+  <div class="wrap">
+    <header>
+      <div><a href="/" aria-label="Cardiff Tax Tools home"><strong>Cardiff Tax Tools</strong></a></div>
+      <nav>
+        <a href="https://www.cardifftax.com/">Main Site</a>
+        <a href="https://www.cardifftax.com/blog">Blog</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Free Tax Calculators by Cardiff Tax Pros</h1>
+      <p>Fast, accurate web tools for individuals and small businesses in North County San Diego and beyond. No signup. Built and maintained by <a href="https://www.cardifftax.com/">Cardiff Tax Pros</a>.</p>
+    </section>
+
+    <section class="grid" aria-label="Calculators">
+      <article class="card">
+        <h2>State Tax Savings Estimator <span class="pill">Popular</span></h2>
+        <p>Compare state income, sales, and property tax impacts for a move or partial-year residency plan. Shareable results to discuss with your CPA.</p>
+        <a class="btn" href="/statetax/">Open Estimator</a>
+        <p style="margin-top:10px;font-size:14px">Learn more: <a href="https://www.cardifftax.com/blog/states-with-the-lowest-taxes">States with the Lowest Taxes in 2025</a></p>
+      </article>
+
+      <article class="card">
+        <h2>Reasonable Compensation Calculator (S-Corp)</h2>
+        <p>Estimate a reasonable salary for S-Corporation owners based on role, industry, and revenue, then model payroll vs. distribution tradeoffs.</p>
+        <a class="btn" href="/reasonablecomp/">Open Calculator</a>
+        <p style="margin-top:10px;font-size:14px">Guide: <a href="https://www.cardifftax.com/">When S-Corp status makes sense</a></p>
+      </article>
+    </section>
+
+    <section class="two-col" aria-label="Why and How">
+      <div>
+        <h2>Why use Cardiff Tax Tools?</h2>
+        <ul>
+          <li>Built by a certified tax preparer and bookkeeper (CTEC & NACPB).</li>
+          <li>Local expertise in Encinitas / North County + online nationwide.</li>
+          <li>Transparent assumptions and exportable summaries for your records.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Need professional advice?</h2>
+        <p>These tools are for planning only. For personalized guidance, book a consult.</p>
+        <p><a class="btn" href="https://www.cardifftax.com/book-online">Book a Tax Consult</a></p>
+      </div>
+    </section>
+
+    <section id="faq" class="faq" aria-label="FAQs">
+      <h2>Frequently Asked Questions</h2>
+      <dl>
+        <dt>Are these calculators free?</dt>
+        <dd>Yes. No login, no email required.</dd>
+
+        <dt>Do the results replace tax advice?</dt>
+        <dd>No—they're planning tools. For filings or entity planning, <a href="https://www.cardifftax.com/">work with Cardiff Tax Pros</a>.</dd>
+
+        <dt>Will you add more tools?</dt>
+        <dd>Yes—bookmark this page. We're building more calculators focused on California and small-business owners.</dd>
+      </dl>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> Cardiff Tax Pros — Encinitas, CA • <a href="https://www.cardifftax.com/">cardifftax.com</a></div>
+      <div>Service area: Encinitas, Cardiff-by-the-Sea, Solana Beach, Carlsbad, San Marcos, and online.</div>
+    </footer>
+  </div>
+  <script>document.getElementById('y').textContent=new Date().getFullYear()</script>
 </body>
 </html>

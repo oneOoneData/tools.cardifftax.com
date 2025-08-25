@@ -55,6 +55,8 @@ jobs:
           
           # Copy root files
           cp index.html dist/ || true
+          cp robots.txt dist/ || true
+          cp sitemap.xml dist/ || true
           
           # Show what we're deploying
           echo "Deploying structure:"
