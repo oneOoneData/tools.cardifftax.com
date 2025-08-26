@@ -13,6 +13,45 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "Reasonable Compensation Calculator",
+              "description": "Professional S-Corp compensation analysis tool for business owners and tax professionals",
+              "applicationCategory": "FinanceApplication",
+              "operatingSystem": "Web Browser",
+              "isAccessibleForFree": true,
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "provider": {
+                "@type": "Organization",
+                "name": "Cardiff Tax Pros",
+                "url": "https://www.cardifftax.com",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Encinitas",
+                  "addressRegion": "CA",
+                  "addressCountry": "US"
+                }
+              },
+              "featureList": [
+                "Market-based compensation analysis",
+                "Industry-specific salary calculations",
+                "S-Corp compliance guidelines",
+                "PDF report generation",
+                "Professional consultation referral"
+              ]
+            })
+          }}
+        />
+      </head>
       <body className="bg-gray-50 min-h-screen">
         {children}
       </body>

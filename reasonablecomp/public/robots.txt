@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tools.cardifftax.com/sitemap.xml
+
+# Allow all calculators and tools
+Allow: /statetax/
+Allow: /reasonablecomp/
+Allow: /app/
+
+# Disallow admin and build files
+Disallow: /_next/
+Disallow: /.next/
+Disallow: /out/
+Disallow: /node_modules/

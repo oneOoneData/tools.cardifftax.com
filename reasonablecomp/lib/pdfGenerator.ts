@@ -453,6 +453,23 @@ export function downloadSimpleCompensationPDF(
     yPosition = (doc as any).lastAutoTable.finalY + 20;
   }
 
+  // Compensation Ranges Explanation
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Compensation Range Analysis', 20, yPosition);
+  yPosition += 15;
+  
+  doc.setFontSize(10);
+  doc.text('The following ranges provide guidance for reasonable compensation based on market data:', 20, yPosition, { maxWidth: 170 });
+  yPosition += 15;
+  doc.text('• Conservative: 15% below market rate (lower risk, may be conservative for IRS)', 20, yPosition, { maxWidth: 170 });
+  yPosition += 12;
+  doc.text('• Market Rate: Based on industry and location data (balanced approach)', 20, yPosition, { maxWidth: 170 });
+  yPosition += 12;
+  doc.text('• Aggressive: 25% above market rate (higher risk, may need strong justification)', 20, yPosition, { maxWidth: 170 });
+  
+  yPosition += 20;
+
   // Compensation Results Section
   doc.setFontSize(14);
   doc.setTextColor(0, 0, 0);
@@ -460,10 +477,13 @@ export function downloadSimpleCompensationPDF(
   yPosition += 15;
 
   const compResults = [
-    ['Total Compensation:', `$${results.totalCompensation.toLocaleString()}`],
-    ['Monthly Target:', `$${Math.round(results.totalCompensation / 12).toLocaleString()}`],
+    ['Conservative Range (Annual):', `$${results.compensationRanges.low.toLocaleString()}`],
+    ['Conservative Range (Monthly):', `$${Math.round(results.compensationRanges.low / 12).toLocaleString()}`],
+    ['Market Rate (Annual):', `$${results.compensationRanges.medium.toLocaleString()}`],
+    ['Market Rate (Monthly):', `$${Math.round(results.compensationRanges.medium / 12).toLocaleString()}`],
+    ['Aggressive Range (Annual):', `$${results.compensationRanges.high.toLocaleString()}`],
+    ['Aggressive Range (Monthly):', `$${Math.round(results.compensationRanges.high / 12).toLocaleString()}`],
     ['Benefits Included:', results.benefits > 0 ? `$${results.benefits.toLocaleString()}/year` : 'No'],
-    ['Total + Benefits:', results.benefits > 0 ? `$${(results.totalCompensation + results.benefits).toLocaleString()}` : `$${results.totalCompensation.toLocaleString()}`],
   ];
 
   autoTable(doc, {

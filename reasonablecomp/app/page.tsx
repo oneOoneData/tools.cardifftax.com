@@ -153,7 +153,7 @@ function ClientForm() {
           'real-estate': 1.05,
         };
 
-        const totalCompensation = Object.entries(formData.roleMix).reduce((total, [role, percentage]) => {
+        const baseCompensation = Object.entries(formData.roleMix).reduce((total, [role, percentage]) => {
           const baseSalary = baseSalaries[role as keyof typeof baseSalaries];
           const stateMultiplier = stateMultipliers[formData.state as keyof typeof stateMultipliers];
           const industryMultiplier = industryMultipliers[formData.industry as keyof typeof industryMultipliers];
@@ -161,9 +161,21 @@ function ClientForm() {
           return total + (baseSalary * percentage * stateMultiplier * industryMultiplier);
         }, 0);
 
+        // Calculate low, medium, and high ranges
+        const lowMultiplier = 0.85;  // 15% below base
+        const highMultiplier = 1.25; // 25% above base
+        
+        const lowCompensation = Math.round(baseCompensation * lowMultiplier);
+        const mediumCompensation = Math.round(baseCompensation);
+        const highCompensation = Math.round(baseCompensation * highMultiplier);
+
         setResults({
           name: formData.name,
-          totalCompensation: Math.round(totalCompensation),
+          compensationRanges: {
+            low: lowCompensation,
+            medium: mediumCompensation,
+            high: highCompensation
+          },
           roleBreakdown: Object.entries(formData.roleMix).map(([role, percentage]) => ({
             role,
             percentage: percentage * 100,
@@ -506,13 +518,34 @@ function ClientForm() {
               <div className="bg-gray-800/70 backdrop-blur-sm rounded-xl p-6 border border-gray-600/50 shadow-custom card-hover">
                 <h3 className="text-2xl font-semibold text-white mb-6">Compensation Analysis</h3>
                 
-                <div className="text-center p-6 bg-blue-900/30 rounded-xl border border-blue-600/50 mb-6 shadow-custom">
-                  <p className="text-sm font-medium text-blue-300 mb-2">Total Compensation</p>
-                  <p className="text-4xl font-bold text-blue-200">${results.totalCompensation.toLocaleString()}</p>
-                  <p className="text-sm text-blue-400 mt-1">Annual Salary</p>
-                  <div className="mt-3 pt-3 border-t border-blue-600/50">
-                    <p className="text-lg font-semibold text-blue-300">${Math.round(results.totalCompensation / 12).toLocaleString()}</p>
+                <div className="space-y-4 mb-6">
+                  <h4 className="text-lg font-semibold text-white text-center">Compensation Ranges</h4>
+                  
+                  {/* Low Range */}
+                  <div className="text-center p-4 bg-red-900/20 rounded-xl border border-red-600/50 shadow-custom">
+                    <p className="text-sm font-medium text-red-300 mb-2">Conservative Range</p>
+                    <p className="text-2xl font-bold text-red-200">${results.compensationRanges.low.toLocaleString()}</p>
+                    <p className="text-sm text-red-400 mb-2">Annual</p>
+                    <div className="text-lg font-semibold text-red-300">${Math.round(results.compensationRanges.low / 12).toLocaleString()}</div>
+                    <p className="text-xs text-red-400">Monthly</p>
+                  </div>
+
+                  {/* Medium Range */}
+                  <div className="text-center p-4 bg-blue-900/30 rounded-xl border border-blue-600/50 shadow-custom">
+                    <p className="text-sm font-medium text-blue-300 mb-2">Market Rate</p>
+                    <p className="text-2xl font-bold text-blue-200">${results.compensationRanges.medium.toLocaleString()}</p>
+                    <p className="text-sm text-blue-400 mb-2">Annual</p>
+                    <div className="text-lg font-semibold text-blue-300">${Math.round(results.compensationRanges.medium / 12).toLocaleString()}</div>
                     <p className="text-xs text-blue-400">Monthly</p>
+                  </div>
+
+                  {/* High Range */}
+                  <div className="text-center p-4 bg-green-900/20 rounded-xl border border-green-600/50 shadow-custom">
+                    <p className="text-sm font-medium text-green-300 mb-2">Aggressive Range</p>
+                    <p className="text-2xl font-bold text-green-200">${results.compensationRanges.high.toLocaleString()}</p>
+                    <p className="text-sm text-green-400 mb-2">Annual</p>
+                    <div className="text-lg font-semibold text-green-300">${Math.round(results.compensationRanges.high / 12).toLocaleString()}</div>
+                    <p className="text-xs text-green-400">Monthly</p>
                   </div>
                 </div>
 
@@ -566,6 +599,25 @@ function ClientForm() {
                 )}
 
                 <div className="mt-6 pt-4 border-t border-gray-600/50">
+                  {/* Email Capture Section */}
+                  <div className="mb-6 p-4 bg-blue-900/20 rounded-lg border border-blue-600/50">
+                    <div className="text-center mb-3">
+                      <div className="text-blue-300 font-medium">Get Results Emailed to You</div>
+                      <div className="text-blue-200 text-sm">Free PDF report + consultation offer</div>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="email"
+                        placeholder="Enter your email address"
+                        className="flex-1 px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-custom">
+                        Send Results
+                      </button>
+                    </div>
+                    <p className="text-xs text-blue-400 mt-2 text-center">We'll never spam you • Unsubscribe anytime</p>
+                  </div>
+
                   <button
                     onClick={() => downloadSimpleCompensationPDF(results)}
                     className="w-full px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] disabled:transform-none disabled:cursor-not-allowed shadow-custom hover:shadow-custom-lg"
@@ -576,17 +628,17 @@ function ClientForm() {
                   <div className="mt-4 text-center">
                     <p className="text-sm text-gray-400 mb-3">Need help implementing this compensation plan?</p>
                     <a
-                      href="https://www.cardifftax.com/book-online"
+                      href="https://www.cardifftax.com/book-online?utm_source=tools&utm_medium=cta&utm_campaign=reasonable_comp_calculator&utm_content=results_page"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-custom hover:shadow-custom-lg"
                     >
                       <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
-                      Discuss with a Tax Pro
+                      Book Free Consultation
                     </a>
-                    <p className="text-xs text-gray-500 mt-2">Free consultation • CTEC & NACP Certified</p>
+                    <p className="text-xs text-gray-500 mt-2">Free consultation • CTEC & NACPB Certified • Encinitas, CA</p>
                   </div>
                 </div>
               </div>
@@ -635,6 +687,29 @@ function ClientForm() {
               <div className="text-sm text-gray-400">Professional Tax Services</div>
             </div>
           </div>
+          
+          {/* Trust Signals */}
+          <div className="flex items-center justify-center space-x-6 mb-4 text-xs text-gray-400">
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>CTEC Certified</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>NACPB Member</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <svg className="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+              </svg>
+              <span>Encinitas, CA</span>
+            </div>
+          </div>
+          
           <div className="text-gray-500 text-sm">
             2025 - www.cardifftax.com
           </div>
