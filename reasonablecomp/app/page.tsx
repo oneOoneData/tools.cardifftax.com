@@ -519,33 +519,82 @@ function ClientForm() {
                 <h3 className="text-2xl font-semibold text-white mb-6">Compensation Analysis</h3>
                 
                 <div className="space-y-4 mb-6">
-                  <h4 className="text-lg font-semibold text-white text-center">Compensation Ranges</h4>
+                  <h4 className="text-lg font-semibold text-white text-center mb-4">Compensation Ranges</h4>
                   
                   {/* Low Range */}
                   <div className="text-center p-4 bg-red-900/20 rounded-xl border border-red-600/50 shadow-custom">
+                    <div className="mb-2">
+                      <span className="inline-block px-3 py-1 bg-red-600/30 text-red-200 text-xs font-semibold rounded-full border border-red-500/50">
+                        LOW BRACKET
+                      </span>
+                    </div>
                     <p className="text-sm font-medium text-red-300 mb-2">Conservative Range</p>
-                    <p className="text-2xl font-bold text-red-200">${results.compensationRanges.low.toLocaleString()}</p>
-                    <p className="text-sm text-red-400 mb-2">Annual</p>
-                    <div className="text-lg font-semibold text-red-300">${Math.round(results.compensationRanges.low / 12).toLocaleString()}</div>
-                    <p className="text-xs text-red-400">Monthly</p>
+                    <div className="space-y-1">
+                      <div className="text-2xl font-bold text-red-200">${results.compensationRanges.low.toLocaleString()}</div>
+                      <div className="text-sm text-red-400">Annual Salary</div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-red-500/30">
+                      <div className="text-lg font-semibold text-red-300">${Math.round(results.compensationRanges.low / 12).toLocaleString()}</div>
+                      <div className="text-xs text-red-400">Monthly</div>
+                    </div>
                   </div>
 
                   {/* Medium Range */}
                   <div className="text-center p-4 bg-blue-900/30 rounded-xl border border-blue-600/50 shadow-custom">
-                    <p className="text-sm font-medium text-blue-300 mb-2">Market Rate</p>
-                    <p className="text-2xl font-bold text-blue-200">${results.compensationRanges.medium.toLocaleString()}</p>
-                    <p className="text-sm text-blue-400 mb-2">Annual</p>
-                    <div className="text-lg font-semibold text-blue-300">${Math.round(results.compensationRanges.medium / 12).toLocaleString()}</div>
-                    <p className="text-xs text-blue-400">Monthly</p>
+                    <div className="mb-2">
+                      <span className="inline-block px-3 py-1 bg-blue-600/30 text-blue-200 text-xs font-semibold rounded-full border border-blue-500/50">
+                        MARKET RATE
+                      </span>
+                    </div>
+                    <p className="text-sm font-medium text-blue-300 mb-2">Recommended Range</p>
+                    <div className="space-y-1">
+                      <div className="text-2xl font-bold text-blue-200">${results.compensationRanges.medium.toLocaleString()}</div>
+                      <div className="text-sm text-blue-400">Annual Salary</div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-blue-500/30">
+                      <div className="text-lg font-semibold text-blue-300">${Math.round(results.compensationRanges.medium / 12).toLocaleString()}</div>
+                      <div className="text-xs text-blue-400">Monthly</div>
+                    </div>
                   </div>
 
                   {/* High Range */}
                   <div className="text-center p-4 bg-green-900/20 rounded-xl border border-green-600/50 shadow-custom">
+                    <div className="mb-2">
+                      <span className="inline-block px-3 py-1 bg-green-600/30 text-green-200 text-xs font-semibold rounded-full border border-green-500/50">
+                        HIGH BRACKET
+                      </span>
+                    </div>
                     <p className="text-sm font-medium text-green-300 mb-2">Aggressive Range</p>
-                    <p className="text-2xl font-bold text-green-200">${results.compensationRanges.high.toLocaleString()}</p>
-                    <p className="text-sm text-green-400 mb-2">Annual</p>
-                    <div className="text-lg font-semibold text-green-300">${Math.round(results.compensationRanges.high / 12).toLocaleString()}</div>
-                    <p className="text-xs text-green-400">Monthly</p>
+                    <div className="space-y-1">
+                      <div className="text-2xl font-bold text-green-200">${results.compensationRanges.high.toLocaleString()}</div>
+                      <div className="text-sm text-green-400">Annual Salary</div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-green-500/30">
+                      <div className="text-lg font-semibold text-green-300">${Math.round(results.compensationRanges.high / 12).toLocaleString()}</div>
+                      <div className="text-xs text-green-400">Monthly</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Comparison Summary */}
+                <div className="mt-6 p-4 bg-gray-700/30 rounded-xl border border-gray-600/50">
+                  <h4 className="text-lg font-semibold text-white text-center mb-4">Quick Comparison</h4>
+                  <div className="grid grid-cols-3 gap-3 text-center">
+                    <div className="p-3 bg-red-900/20 rounded-lg border border-red-600/50">
+                      <div className="text-xs text-red-400 font-medium mb-1">LOW</div>
+                      <div className="text-sm font-bold text-red-200">${results.compensationRanges.low.toLocaleString()}</div>
+                      <div className="text-xs text-red-400">${Math.round(results.compensationRanges.low / 12).toLocaleString()}/mo</div>
+                    </div>
+                    <div className="p-3 bg-blue-900/30 rounded-lg border border-blue-600/50">
+                      <div className="text-xs text-blue-400 font-medium mb-1">MARKET</div>
+                      <div className="text-sm font-bold text-blue-200">${results.compensationRanges.medium.toLocaleString()}</div>
+                      <div className="text-xs text-blue-400">${Math.round(results.compensationRanges.medium / 12).toLocaleString()}/mo</div>
+                    </div>
+                    <div className="p-3 bg-green-900/20 rounded-lg border border-green-600/50">
+                      <div className="text-xs text-green-400 font-medium mb-1">HIGH</div>
+                      <div className="text-sm font-bold text-green-200">${results.compensationRanges.high.toLocaleString()}</div>
+                      <div className="text-xs text-green-400">${Math.round(results.compensationRanges.high / 12).toLocaleString()}/mo</div>
+                    </div>
                   </div>
                 </div>
 
